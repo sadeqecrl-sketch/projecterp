@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="description" content="ERP dashboard for surveillance rating jobs, budget, dues and follow-ups"><meta name="theme-color" content="#232a3b"><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%93%8A%3C/text%3E%3C/svg%3E"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ERP Dashboard</title>
+<style>
+:root{--bg:#f4f6fa;--card:#fff;--tx:#2b3445;--mu:#7b8598;--bd:#e4e8f0;--ac:#408dfb;--ac2:#bcd6fd;--ok:#1f9d55;--bad:#e5484d;--wip:#d98a00;--sb:#232a3b;--hd:#f7f8fc;--hv:#f5f9ff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#151a24;--card:#1e2430;--tx:#e6eaf2;--mu:#97a1b5;--bd:#2d3545;--ac:#5aa0ff;--ac2:#34507c;--ok:#4ade80;--bad:#ff7b80;--wip:#fbbf24;--sb:#10141c;--hd:#232a38;--hv:#252d3c}}
+:root[data-theme="dark"]{--bg:#151a24;--card:#1e2430;--tx:#e6eaf2;--mu:#97a1b5;--bd:#2d3545;--ac:#5aa0ff;--ac2:#34507c;--ok:#4ade80;--bad:#ff7b80;--wip:#fbbf24;--sb:#10141c;--hd:#232a38;--hv:#252d3c}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
+body{zoom:var(--z,1);margin:0;background:var(--bg);color:var(--tx);font:var(--fs,13px)/1.45 "Inter","Segoe UI",-apple-system,Roboto,Arial,sans-serif}
+.app{display:flex;min-height:calc(100vh/var(--z,1))}
+nav{width:min(calc(var(--sbw,220px)*var(--sc,1)),40vw);background:var(--sb);color:#fff;flex:none;position:sticky;top:0;height:calc(100vh/var(--z,1));overflow-y:auto;padding:0 0 16px}
+.lg{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:10px}
+.lg i{width:30px;height:30px;border-radius:8px;background:var(--ac);display:grid;place-items:center;font-style:normal;font-weight:700}
+.lg b{display:block;font-size:1.08em}.lg span{font-size:.85em;opacity:.6}
+nav small{display:block;padding:10px 18px 4px;font-size:.77em;letter-spacing:.08em;text-transform:uppercase;opacity:.45}
+nav button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:0;border-left:3px solid transparent;color:#c5cde0;padding:9px 16px;cursor:pointer;font:inherit}
+nav button:hover{background:rgba(255,255,255,.06)}
+nav button.on{background:color-mix(in srgb,var(--ac) 22%,transparent);border-left-color:var(--ac);color:#fff;font-weight:600}
+nav button em{font-style:normal;width:16px;text-align:center;opacity:.85}
+.wrap{flex:1;min-width:0;display:flex;flex-direction:column}
+.top{position:sticky;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:10px;padding:10px 20px;flex-wrap:wrap}
+.top input,.top select{padding:7px 10px;border:1px solid var(--bd);border-radius:6px;background:var(--bg);color:var(--tx);font:inherit}
+.top input{width:260px;max-width:100%}.top .sp{flex:1}
+.btn{background:var(--ac);color:#fff;border:0;border-radius:6px;padding:7px 14px;cursor:pointer;font:inherit;font-weight:600}
+.btn.o{background:var(--card);color:var(--tx);border:1px solid var(--bd);font-weight:500}
+main{padding:20px;max-width:var(--mw,none);margin:0 auto;width:100%}
+h1{font-size:1.54em;font-weight:600;margin:0 0 14px}h3{font-size:1em;font-weight:600;margin:0 0 10px}
+.k{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:0;margin-bottom:16px;background:var(--card);border:1px solid var(--bd);border-radius:8px;overflow:hidden}
+.c{padding:14px 16px;border-right:1px solid var(--bd);border-bottom:1px solid var(--bd);margin:-1px -1px 0 0}
+.c span{color:var(--mu);font-size:.85em;text-transform:uppercase;letter-spacing:.04em}.c b{display:block;font-size:calc(var(--kp,20px)*var(--sc,1));font-weight:600;margin-top:4px;color:var(--ac)}.c i{font-style:normal;font-size:.85em;color:var(--mu)}
+.g{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:14px;margin-bottom:14px}
+.sc{resize:vertical;overflow:auto;background:var(--card);border:1px solid var(--bd);border-radius:8px}
+table{border-collapse:collapse;width:100%;white-space:nowrap}
+th,td{padding:var(--cp,9px 12px);border-bottom:1px solid var(--bd);text-align:left}
+th{position:sticky;top:0;background:var(--hd);font-size:.85em;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.04em;cursor:pointer}
+td.n,th.n{text-align:right}tr.t td{font-weight:700;background:var(--hd)}tbody tr.r:hover{background:var(--hv);cursor:pointer}
+tr.r td:first-child{color:var(--ac);font-weight:500}
+.b{padding:2px 9px;border-radius:4px;font-size:.85em;font-weight:600;background:color-mix(in srgb,currentColor 13%,transparent)}
+.Done{color:var(--ok)}.WIP{color:var(--wip)}.NOT{color:var(--bad)}.CANCEL{color:var(--mu)}
+.f{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.f input,.f select{padding:8px 10px;border:1px solid var(--bd);border-radius:6px;background:var(--card);color:var(--tx);font:inherit}
+.f input{flex:1;min-width:180px}
+.pos{color:var(--ok)}.neg{color:var(--bad)}.note{color:var(--mu);font-size:.92em;margin:8px 0}
+.h{display:none}
+.rzh{position:absolute;right:0;top:0;bottom:0;width:7px;cursor:col-resize;touch-action:none}.rzh:hover,.rzh:active{background:var(--ac);opacity:.45}
+table[style*="fixed"] th,table[style*="fixed"] td{overflow:hidden;text-overflow:ellipsis}
+#sbr{flex:none;width:8px;margin:0 -4px;position:sticky;top:0;height:calc(100vh/var(--z,1));cursor:col-resize;z-index:7;touch-action:none}#sbr:hover,#sbr:active{background:var(--ac);opacity:.35}nav.hid+#sbr,nav.mini+#sbr{display:none}
+@media(max-width:760px){#sbr{display:none}}
+.cpw{display:flex;justify-content:flex-end;margin:0 0 6px;position:relative}.cp summary{cursor:pointer;list-style:none;border:1px solid var(--bd);background:var(--card);border-radius:6px;padding:5px 12px;font-size:.92em}.cp summary::-webkit-details-marker{display:none}
+.cpm{position:absolute;right:0;top:100%;margin-top:4px;z-index:8;background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:8px 12px;min-width:190px;max-height:50vh;overflow:auto;box-shadow:0 8px 24px rgba(0,0,0,.18)}.cpm label{display:block;white-space:nowrap;padding:3px 0;break-inside:avoid}
+.fdg{display:flex;flex-wrap:wrap;gap:4px 20px}.fdl{white-space:nowrap}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}nav button:focus-visible{outline-offset:-2px}
+.skip{position:absolute;left:-999px;top:0;background:var(--ac);color:#fff;padding:8px 14px;z-index:30;border-radius:0 0 6px 0}.skip:focus{left:0}
+.btn[disabled]{opacity:.5;cursor:default}
+.acc{display:flex;gap:0}.acc .btn{border-radius:0;padding:7px 10px;margin-left:-1px}.acc .btn:first-child{border-radius:6px 0 0 6px}.acc .btn.on{background:var(--ac);color:#fff;border-color:var(--ac)}.md{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:40;display:grid;place-items:center}.md.h{display:none}.md>div{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:20px;width:min(460px,92vw);max-height:90vh;overflow:auto}
+.jfg{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}.jfl{display:block}.jfl .in{margin-top:3px}
+.btn.dis,.btn[disabled]{opacity:.45;cursor:not-allowed}label.btn.dis{pointer-events:none}select[disabled],input[disabled]{opacity:.5;cursor:not-allowed}
+.cmi{display:block;width:100%;text-align:left;border:0;background:none;color:var(--tx);padding:8px 10px;border-radius:6px;cursor:pointer;font:inherit}.cmi:hover:not([disabled]),.cmi:focus-visible{background:var(--hv)}.cmi[disabled]{opacity:.4;cursor:not-allowed}
+.acc .btn:last-child{border-radius:0 6px 6px 0}
+th{z-index:2}.fr td{position:sticky;top:34px;background:var(--hd);padding:4px 6px;z-index:1;border-bottom:1px solid var(--bd)}.fr input.in{min-width:60px;padding:4px 6px;font-size:.92em;width:100%}
+.Halt{color:#8b5cf6}
+nav.hid{display:none}nav.mini #dfoot,nav.mini .lg div,nav.mini small{display:none}nav.mini .lg{justify-content:center;padding:14px 0}nav.mini button{font-size:0;justify-content:center;padding:11px 0;border-left-width:3px}nav.mini button em{font-size:16px;width:auto}
+.pt{display:none}#toast{display:none;position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--tx);color:var(--card);padding:10px 16px;border-radius:8px;z-index:20;max-width:90%}
+@media print{:root:not(#z){--bg:#fff;--card:#fff;--tx:#000;--bd:#ccc;--mu:#555;--hd:#f2f2f2;--hv:#fff}nav,.top,.dr,#toast,.fr,.fc,.cpw,#sbr,.rzh{display:none!important}.pt{display:block;font-weight:600;margin-bottom:10px}main{padding:0}.sc{max-height:none!important;overflow:visible!important}th{position:static}.app{display:block}body{background:#fff;zoom:1!important}table{white-space:normal;font-size:10px}}
+.sw{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 14px}.sw button{width:28px;height:28px;border-radius:50%;border:2px solid var(--card);box-shadow:0 0 0 1px var(--bd);cursor:pointer;padding:0}
+.sw button.on{box-shadow:0 0 0 2px var(--tx)}.sw input[type=color]{width:34px;height:30px;border:0;padding:0;background:none;cursor:pointer}
+.in{padding:6px 8px;border:1px solid var(--bd);border-radius:6px;background:var(--card);color:var(--tx);font:inherit;width:100%;min-width:110px}
+.lab{font-size:.85em;text-transform:uppercase;letter-spacing:.04em;color:var(--mu)}.x{border:0;background:none;color:var(--bad);cursor:pointer;font-size:16px}
+.bar{display:flex;align-items:center;gap:8px;margin:6px 0;font-size:.92em}.bar em{width:120px;font-style:normal;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:none}
+.bar div{flex:1;background:var(--bg);border-radius:3px;height:10px;overflow:hidden;display:flex}.bar u{display:block;height:100%;background:var(--ac)}
+.bar s{text-decoration:none;width:90px;text-align:right;flex:none}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:14px}
+.mc{display:flex;align-items:flex-end;gap:6px;height:var(--ch,150px);padding-top:6px}.mc div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;font-size:.77em;color:var(--mu)}
+.mc p{display:flex;align-items:flex-end;gap:2px;height:calc(var(--ch,150px) - 30px);margin:0}.mc u{width:9px;background:var(--ac);display:block;border-radius:2px 2px 0 0}.mc u.o{background:var(--ac2)}
+.dr{position:fixed;top:0;right:0;bottom:0;width:min(440px,100%);background:var(--card);border-left:1px solid var(--bd);padding:calc(16px + env(safe-area-inset-top,0px)) 18px 16px;overflow-y:auto;box-shadow:-8px 0 24px rgba(0,0,0,.18);z-index:9}
+.dr dl{display:grid;grid-template-columns:130px 1fr;gap:8px;margin:12px 0;font-size:1em}.dr dt{color:var(--mu)}.dr dd{margin:0}
+.dr button{float:right;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:6px;padding:4px 10px;cursor:pointer}
+@media(max-width:760px){.app{flex-direction:column}nav{width:100%;height:auto;position:static;display:flex;flex-wrap:wrap;padding:0 8px 8px}.lg,nav small{width:100%}nav button{width:auto;border-left:0;border-radius:6px}.g{grid-template-columns:1fr}.top input{width:100%}}
+</style></head><body><a class="skip" href="#main">Skip to content</a><div class="app">
+<nav><div class="lg"><i>E</i><div><b>ERP</b><span>Rating Operations 2026</span></div></div>
+<small>Home</small><button class="on" data-t="ov"><em>&#8962;</em>Dashboard</button><button data-t="mv"><em>&#9786;</em>My view</button>
+<small>Sales</small><button data-t="jb"><em>&#9776;</em>Jobs</button><button data-t="du"><em>&#9888;</em>Dues</button><button data-t="fu"><em>&#9993;</em>Follow-ups</button><button data-t="wk"><em>&#9998;</em>Working</button><button data-t="sv"><em>&#9673;</em>Surveillance</button><button data-t="rn"><em>&#8635;</em>Renewals</button>
+<small>Reports</small><button data-t="bu"><em>&#9650;</em>Budget vs Actual</button><button data-t="yy"><em>&#8644;</em>Year-to-year</button><button data-t="dh"><em>&#10003;</em>Data health</button><button data-t="an"><em>&#9679;</em>Analysis</button><button data-t="tm"><em>&#9733;</em>Team report</button><small>Settings</small><button data-t="alog"><em>&#8986;</em>Activity log</button><button data-t="od"><em>&#9638;</em>Other data</button><button data-t="cpn"><em>&#9881;</em>Control panel</button><div id="dfoot" style="padding:12px 16px;font-size:.77em;opacity:.6"></div></nav><div id="sbr" title="Drag to resize the sidebar"></div>
+<div class="wrap"><header class="top"><button class="btn o" id="sbt" title="Show / hide sidebar" aria-label="Show or hide sidebar">&#9776;</button><div class="acc" role="group" aria-label="Zoom"><button class="btn o" id="zmm" title="Zoom out" aria-label="Zoom out">&minus;</button><button class="btn o" id="zmr" title="Reset zoom to 100%" aria-label="Reset zoom">100%</button><button class="btn o" id="zmp" title="Zoom in" aria-label="Zoom in">+</button></div><div class="acc" role="group" aria-label="Text size"><button class="btn o" id="afm" title="Smaller text" aria-label="Decrease text size">A&minus;</button><button class="btn o" id="afr" title="Reset text size" aria-label="Reset text size">A</button><button class="btn o" id="afp" title="Larger text" aria-label="Increase text size">A+</button></div><input id="gs" placeholder="Search jobs, clients, banks..."><span class="sp"></span><div class="acc" id="scp" role="group" aria-label="View scope"><button class="btn o" data-s="all">Everyone</button><button class="btn o" data-s="team">My team</button><button class="btn o" data-s="me">Me</button></div><button class="btn o" id="usr" title="Profile &amp; access">Sign in</button><button class="btn o" id="cmb" title="Commands (Ctrl+K)">&#8984; Commands</button><select id="gdp"><option value="">All departments</option></select><select id="gtm"><option value="">All teams</option></select><select id="gan"><option value="">All analysts</option></select><button class="btn o" id="cf" title="Clear all column filters on this page">&#10005; Clear filters</button><button class="btn o" id="bx">&#8681; Excel</button><button class="btn o" id="bp">&#128196; PDF</button><button class="btn o" id="bpr">&#128424; Print</button><button class="btn o" id="cp">&#10697; Copy table</button><button class="btn" id="nj">Jobs list</button></header>
+<main id="main" tabindex="-1"><div class="pt" id="pt"></div>
+<section id="ov"><h1>Overview</h1><div id="onb"></div><h3>Attention needed</h3><div class="k" id="alr"></div><div class="k" id="kp"></div><div class="g"><div class="card" data-w="chart"><h3>Budget vs actual by month (ex-VAT)</h3><div class="mc" id="mch"></div><div class="note">Light = budget, dark = actual. Hover for values.</div></div><div class="card" data-w="status"><h3>Jobs by status</h3><div id="sb"></div></div><div class="card" data-w="clients"><h3>Top 10 clients by agreement value</h3><div id="tc"></div></div><div class="card" data-w="banks"><h3>Top 10 banks by agreement value</h3><div id="tb"></div></div></div></section>
+
+<section id="bu" class="h"><h1>Budget vs Actual</h1><div class="f"><button class="btn o" onclick="bgEdit()">Edit budget</button></div><div class="k" id="bfk"></div><div class="sc"><table id="mt"></table></div><div class="note">Budget = "Initial" rows of the budget file. Actual = ex-VAT budgeted amount of booked jobs per month (all statuses). Feb SME differs from the budget file's SURV. row (2 jobs / 13,000 vs 1 job / 5,000 here).</div></section>
+
+<section id="an" class="h"><h1>Analysis</h1><div class="f"><select id="dim"></select></div><div class="sc"><table id="at"></table></div><div class="note">Collection % = collected / agreement value. Click a header to sort.</div></section>
+
+<section id="jb" class="h"><h1>Jobs</h1><div class="f"><input id="q" placeholder="Search client, bank, code, analyst, sector..."><select id="fs"><option value="">All statuses</option><option>Done</option><option>WIP</option><option>NOT DONE</option><option>CANCEL</option><option>Halt</option></select><select id="ft"><option value="">All types</option><option>SME</option><option>CD &amp; Others</option></select><select id="fm"><option value="">All months</option></select><button class="btn" onclick="jobEdit('')">+ Add job</button></div><div class="sc" style="max-height:calc(72vh/var(--z,1))"><table id="jt"></table></div><div class="note" id="jn"></div></section>
+
+<section id="du" class="h"><h1>Dues follow-up</h1><div class="card" style="margin-bottom:14px"><h3>Dues aging</h3><div id="dga"></div></div><div class="sc" style="max-height:calc(78vh/var(--z,1))"><table id="dt"></table></div><div class="note" id="dn"></div></section>
+
+<section id="rn" class="h"><h1>Report validity &amp; renewals</h1><div class="k" id="rk"></div><div class="sc" style="max-height:calc(70vh/var(--z,1))"><table id="rt"></table></div><div class="note">Validity is measured from today's date against each report's "Valid till". Cancelled jobs excluded.</div></section>
+<section id="sv" class="h"><h1>Surveillance status - WIP, Not Done, Cancel, Halt</h1><div class="k" id="svk"></div>
+<h3>Status summary</h3><div class="sc" style="margin-bottom:16px"><table id="svt" data-n="Status summary"></table></div>
+<div class="g"><div><h3>By month</h3><div class="sc"><table id="svm" data-n="By month"></table></div></div><div><h3>By analyst</h3><div class="sc" style="max-height:420px"><table id="sva" data-n="By analyst"></table></div></div></div>
+<h3>Job list</h3><div class="f"><select id="svs" onchange="svf=this.value;svr()"><option value="">All four statuses</option><option value="WIP">WIP</option><option value="NOT DONE">Not Done</option><option value="CANCEL">Cancel</option><option value="Halt">Halt</option></select></div>
+<div class="sc" style="max-height:calc(60vh/var(--z,1))"><table id="svj" data-n="Job list"></table></div><div class="note" id="svn"></div>
+<div class="note">Source: the uploaded surveillance job list. Click a status card to filter the list; click a job for details, where you can also change its status (saved in this browser only).</div></section>
+<section id="fu" class="h"><h1>Follow-ups</h1><div class="k" id="fuk"></div><div class="sc" style="max-height:calc(70vh/var(--z,1))"><table id="fut"></table></div><div class="note" id="fun"></div></section>
+<section id="dh" class="h"><h1>Data health</h1><div class="k" id="dhk"></div><div class="sc" style="margin-bottom:14px"><table id="dht" data-n="Checks"></table></div><h3 id="dhh"></h3><div class="sc" style="max-height:calc(55vh/var(--z,1))"><table id="dhd" data-n="Affected jobs"></table></div></section>
+<section id="mv" class="h"><h1>My view</h1><div class="f"><select id="mvp" onchange="ST.mvu=0;mvr()" aria-label="Person"></select><select id="mvt" onchange="ST.mvu=1;mvr()" aria-label="Team"></select></div><h3 id="mvh1"></h3><div class="k" id="mvk"></div><h3>Jobs</h3><div class="sc" style="max-height:50vh;margin-bottom:16px"><table id="mvj" data-n="Jobs"></table></div><div id="mvtm"><h3 id="mvh2"></h3><div class="k" id="mvk2"></div><h3>Team members</h3><div class="sc" style="max-height:50vh"><table id="mvm" data-n="Team members"></table></div></div><div class="note" id="mvn"></div></section>
+<section id="tm" class="h"><h1>Team report</h1><div class="k" id="tmk"></div><div class="g"><div class="card"><h3>Agreement value by team</h3><div id="tmc"></div></div></div><h3>Teams</h3><div class="sc" style="margin-bottom:16px"><table id="tmt" data-n="Teams"></table></div><h3>Departments</h3><div class="sc" style="margin-bottom:16px"><table id="tmd" data-n="Departments"></table></div><h3>Members by team</h3><div class="sc" style="max-height:60vh"><table id="tmm" data-n="Members"></table></div><div class="note" id="tmn"></div></section>
+<section id="yy" class="h"><h1>Year-to-year comparison</h1><div class="f"><select id="yyt2" onchange="yyr()"><option value="">All types</option><option value="SME">SME</option><option value="CD">CD &amp; Others</option></select></div><div class="k" id="yyk"></div><div class="card" style="margin-bottom:14px"><h3>Monthly amount (ex-VAT)</h3><div class="mc" id="yyc"></div><div class="note" id="yyl"></div></div><div class="sc"><table id="yyt"></table></div><div class="note" id="yyn"></div></section>
+<section id="wk" class="h"><h1>Working</h1><div class="k" id="wkk"></div><div class="f"><input id="wkq" placeholder="Search code, client, analyst, stage..." oninput="wkr()"></div><div class="sc" style="max-height:calc(70vh/var(--z,1))"><table id="wkt"></table></div><div class="note" id="wkn"></div></section>
+<section id="alog" class="h"><h1>Activity log</h1><div class="sc" style="max-height:75vh"><table id="lgt"></table></div><div class="note" id="lgn"></div></section>
+<section id="od" class="h"><h1>Other data</h1><div class="f"><select id="odsel" onchange="odr()"></select></div><div class="sc" style="max-height:calc(75vh/var(--z,1))"><table id="odt"></table></div><div class="note" id="odn"></div></section>
+<section id="cpn" class="h"><h1>Control panel</h1><div class="g"><div class="card" style="grid-column:1/-1"><h3 style="margin:0 0 6px">My profile &amp; access</h3><div id="mep"></div><div id="ucw"><h3 style="margin:14px 0 6px">Users &amp; access</h3><div class="sc"><table id="ucl"></table></div><div class="note" id="ucn"></div></div></div></div><h3>Data console</h3><div class="note">Upload Excel (.xlsx/.xls) or CSV. Data is applied everywhere immediately and kept in this browser. Use Template for the expected columns.</div><div class="g" id="dcs"></div>
+<div class="g"><div class="card"><h3>Appearance</h3>
+<div class="lab">Accent colour</div><div class="sw" id="swa"></div>
+<div class="lab">Sidebar colour</div><div class="sw" id="sws"></div>
+<div class="lab">Mode</div><div class="f" style="margin-top:6px"><select id="mdsel" class="in" style="width:auto"><option value="auto">Auto (device)</option><option value="light">Light</option><option value="dark">Dark</option></select><button class="btn o" onclick="resetTheme()">Reset to default</button></div>
+<div class="note">Appearance and team settings are saved in this browser only.</div></div>
+<div class="card"><h3>Display &amp; layout</h3><div id="dsp"></div></div>
+<div class="card"><h3>Add team</h3><div class="f"><input id="tn" class="in" placeholder="Team name, e.g. Corporate Desk"><button class="btn" onclick="addTeam()">Add team</button></div>
+<h3 style="margin-top:14px">Add department</h3><div class="f"><input id="dpn" class="in" placeholder="Department name, e.g. Business Development"><button class="btn" onclick="addDept()">Add department</button></div>
+<h3 style="margin-top:14px">Add team member</h3><div class="f"><input id="mn" class="in" placeholder="Member name"><input id="mr" class="in" placeholder="Role"><select id="mdp" class="in"></select><select id="mt2" class="in"></select><button class="btn" onclick="addMember()">Add member</button></div>
+<div id="mbk"></div><div class="note"><b>BD Person</b> and <b>Other</b> are built-in teams.</div><div class="f" style="margin:8px 0 0"><button class="btn o" onclick="toOther()">Put all unassigned in Other</button></div></div></div>
+<h3>Teams</h3><div class="sc" style="margin-bottom:16px"><table id="tmt" data-n="Teams"></table></div><h3>Departments</h3><div class="sc" style="margin-bottom:16px"><table id="tmd" data-n="Departments"></table></div><h3>Members by team</h3><div class="sc" style="max-height:60vh"><table id="tmm" data-n="Members"></table></div><div class="note" id="tmn"></div></section>
+<section id="yy" class="h"><h1>Year-to-year comparison</h1><div class="f"><select id="yyt2" onchange="yyr()"><option value="">All types</option><option value="SME">SME</option><option value="CD">CD &amp; Others</option></select></div><div class="k" id="yyk"></div><div class="card" style="margin-bottom:14px"><h3>Monthly amount (ex-VAT)</h3><div class="mc" id="yyc"></div><div class="note" id="yyl"></div></div><div class="sc"><table id="yyt"></table></div><div class="note" id="yyn"></div></section>
+<section id="wk" class="h"><h1>Working</h1><div class="k" id="wkk"></div><div class="f"><input id="wkq" placeholder="Search code, client, analyst, stage..." oninput="wkr()"></div><div class="sc" style="max-height:calc(70vh/var(--z,1))"><table id="wkt"></table></div><div class="note" id="wkn"></div></section>
+<section id="alog" class="h"><h1>Activity log</h1><div class="sc" style="max-height:75vh"><table id="lgt"></table></div><div class="note" id="lgn"></div></section>
+<section id="od" class="h"><h1>Other data</h1><div class="f"><select id="odsel" onchange="odr()"></select></div><div class="sc" style="max-height:calc(75vh/var(--z,1))"><table id="odt"></table></div><div class="note" id="odn"></div></section>
+<section id="cpn" class="h"><h1>Control panel</h1><div class="g"><div class="card" style="grid-column:1/-1"><h3 style="margin:0 0 6px">My profile &amp; access</h3><div id="mep"></div><div id="ucw"><h3 style="margin:14px 0 6px">Users &amp; access</h3><div class="sc"><table id="ucl"></table></div><div class="note" id="ucn"></div></div></div></div><h3>Data console</h3><div class="note">Upload Excel (.xlsx/.xls) or CSV. Data is applied everywhere immediately and kept in this browser. Use Template for the expected columns.</div><div class="g" id="dcs"></div>
+<div class="g"><div class="card"><h3>Appearance</h3>
+<div class="lab">Accent colour</div><div class="sw" id="swa"></div>
+<div class="lab">Sidebar colour</div><div class="sw" id="sws"></div>
+<div class="lab">Mode</div><div class="f" style="margin-top:6px"><select id="mdsel" class="in" style="width:auto"><option value="auto">Auto (device)</option><option value="light">Light</option><option value="dark">Dark</option></select><button class="btn o" onclick="resetTheme()">Reset to default</button></div>
+<div class="note">Appearance and team settings are saved in this browser only.</div></div>
+<div class="card"><h3>Display &amp; layout</h3><div id="dsp"></div></div>
+<div class="card"><h3>Add team</h3><div class="f"><input id="tn" class="in" placeholder="Team name, e.g. Corporate Desk"><button class="btn" onclick="addTeam()">Add team</button></div>
+<h3 style="margin-top:14px">Add team member</h3><div class="f"><input id="mn" class="in" placeholder="Member name"><input id="mr" class="in" placeholder="Role"><select id="mt2" class="in"></select><button class="btn" onclick="addMember()">Add member</button></div>
+<div class="note">Analysts from the job data are listed automatically. Assign them to teams below. <b>BD Person</b> and <b>Other</b> are built-in teams.</div><div class="f" style="margin:8px 0 0"><button class="btn o" onclick="toOther()">Put all unassigned in Other</button></div></div></div>
+<h3>Teams</h3><div class="sc" style="margin-bottom:16px"><table id="tt"></table></div>
+<h3>Departments</h3><div class="sc" style="margin-bottom:16px"><table id="dpt"></table></div>
+<h3>Team members</h3><div class="f"><select id="mgb" class="in" style="width:auto" onchange="setC('mgb',this.value)" aria-label="Group members by"><option value="">Sort by name</option><option value="dept">Group by department</option><option value="team">Group by team</option></select></div><div class="sc"><table id="mtb"></table></div></section></main></div></div><div id="cm" class="md h"></div><div id="pf" class="md h"></div><div id="toast" role="status" aria-live="polite"></div><aside class="dr h" id="dr" role="dialog" aria-label="Job details"></aside>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+<script>
+const DEFRAW=[],TODAY=new Date(new Date().toISOString().slice(0,10));
+let RAW=DEFRAW,ALL=RAW,D=ALL;
+const MO=["January","February","March","April","May","June","July","August","September","October","November","December"];
+const DEFB={January:[0,0],February:[0,0],March:[0,0],April:[0,0],May:[0,0],June:[0,0],July:[0,0],August:[0,0],September:[0,0],October:[0,0],November:[0,0],December:[0,0]};
+let B=DEFB;
+const f=x=>Math.round(x).toLocaleString("en-US"),$=id=>document.getElementById(id);
+const sum=(a,k)=>a.reduce((s,r)=>s+(r[k]||0),0),pc=(a,b)=>b?Math.round(a/b*100)+"%":"-";
+const st=s=>`<span class="b ${s.split(" ")[0]}">${s}</span>`;
+const bars=(rows,fmt)=>{const m=Math.max(1,...rows.map(r=>r[1]));return rows.map(r=>`<div class="bar" title="${r[0]}"><em>${r[0]}</em><div><u style="width:${r[1]/m*100}%"></u></div><s>${fmt?fmt(r[1]):f(r[1])}</s></div>`).join("")};
+const grp=(k,key)=>{const o={};D.forEach(r=>{const g=r[k]||"N/A";(o[g]=o[g]||[]).push(r)});return Object.entries(o)};
+const dims={an:"Analyst",bk:"Bank",sec:"Sector",cat:"Category",ty:"Type (SME / CD&O)",dv:"Division",zn:"Zone",dis:"District",ow:"Fee range",mo:"Month"};
+Object.entries(dims).forEach(([k,v])=>$("dim").insertAdjacentHTML("beforeend",`<option value="${k}">By ${v}</option>`));
+[...MO,"CF"].forEach(m=>$("fm").insertAdjacentHTML("beforeend",`<option>${m}</option>`));
+let DS={};try{DS=JSON.parse(localStorage.getItem("erpdata")||"{}")}catch(e){}
+const saveDS=()=>{try{localStorage.setItem("erpdata",JSON.stringify(DS))}catch(e){toast("Browser storage is full - data is kept for this session only")}syPush()};
+const T=v=>v==null?"":(v instanceof Date?dstr(v):String(v).trim());
+const dstr=v=>{const d=new Date(v.getTime()+43200000);return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
+const NU=v=>{if(typeof v=="number")return v;const x=parseFloat(String(v==null?"":v).replace(/[^\d.\-]/g,""));return isNaN(x)?0:x};
+const DV=v=>{if(v instanceof Date)return dstr(v);if(typeof v=="number"&&v>20000&&v<80000)return dstr(new Date(Math.round((v-25569)*864e5)));const s=T(v),m=s.match(/^\d{4}-\d{2}-\d{2}/);return m?m[0]:s};
+const MF=s=>{const t=T(s).slice(0,3).toLowerCase();return MO.find(x=>x.slice(0,3).toLowerCase()==t)||T(s)};
+const hdr=(a,ks,mx=15)=>{for(let i=0;i<Math.min(a.length,mx);i++){const r=a[i].map(c=>T(c).toLowerCase());if(ks.some(k=>r.includes(k)))return i}return -1};
+async function readAOA(file){if(typeof XLSX=="undefined")throw Error("Excel library failed to load");
+const wb=XLSX.read(await file.arrayBuffer(),{type:"array",cellDates:true});return XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,raw:true,defval:null,blankrows:false})}
+const JM={"code- ref":"code","code":"code","job code":"code","lead name":"cl","client name":"cl","client":"cl","category name":"cat","category":"cat","bank name":"bk","bank":"bk","branch name":"br","branch":"br","analyst name":"an","analyst":"an","sor":"ty","type":"ty","type (sor)":"ty","month":"mo","budget month":"mo","type-job":"jt","job type":"jt","sector":"sec","status":"st","zone":"zn","division":"dv","district":"dis","thana":"th","date of rating":"rd","valid till":"vt","report print date":"pd","bill collection date":"bd","fee range":"ow","agreement value":"ag","agreement value (incl. vat)":"ag","collect amount":"co","collected":"co","discount amount":"dc","discount":"dc","dues amount":"du","dues":"du","vat amount":"vat","vat":"vat","budgeted amount":"bu","budget amount (ex-vat)":"bu","bank person name":"bc","bank contact":"bc","bank person contact no":"bn","bank contact no":"bn","client contact person":"cc","client contact":"cc","client contact no.":"cn","client contact no":"cn"};
+function pJobs(a){const hi=hdr(a,["lead name","client name","client"]);if(hi<0)return{err:"Header row with 'Lead Name' (or 'Client Name') not found."};
+const col={};a[hi].forEach((h,i)=>{const f=JM[T(h).toLowerCase()];if(f&&col[f]==null)col[f]=i});
+const miss=[["code","CODE- REF"],["cl","Lead Name"],["ag","Agreement Value"]].filter(x=>col[x[0]]==null).map(x=>x[1]);if(miss.length)return{err:"Missing required column(s): "+miss.join(", ")};
+const TX=["code","cl","cat","bk","br","an","jt","sec","zn","dv","dis","th","ow","bc","bn","cc","cn"],DT=["rd","vt","pd","bd"],NM=["ag","co","dc","du","vat","bu"];let skip=0;const rows=[],seen=new Set();let dup=0;
+a.slice(hi+1).forEach(r=>{const g=k=>col[k]==null?null:r[col[k]],code=T(g("code")),cl=T(g("cl"));if(!code||!cl||/^total/i.test(code)){skip++;return}
+const o={};TX.forEach(k=>{const v=T(g(k));if(v)o[k]=v});DT.forEach(k=>{const v=DV(g(k));if(v)o[k]=v});NM.forEach(k=>{if(col[k]!=null)o[k]=Math.round(NU(g(k))*100)/100});
+const s=T(g("st")).toUpperCase();o.st=s=="DONE"?"Done":s=="HALT"?"Halt":s.startsWith("NOT")?"NOT DONE":s.startsWith("CANC")?"CANCEL":s?(s=="WIP"?"WIP":T(g("st"))):"WIP";
+const ty=T(g("ty"));o.ty=/sme/i.test(ty)?"SME":(ty||"CD & Others");o.mo=MF(g("mo"));if(!o.mo&&o.rd)o.mo=MO[Number(o.rd.slice(5,7))-1]||"";
+o.ag=o.ag||0;o.dc=o.dc||0;if(o.co==null)o.co=o.du==null?o.ag:Math.max(0,o.ag-o.dc-o.du);if(o.du==null)o.du=Math.max(0,o.ag-o.co-o.dc);o.vat=o.vat||0;if(o.bu==null)o.bu=Math.round(o.ag/1.075*100)/100;
+if(!o.an)o.an="Unassigned";if(!o.rd)o.rd="";if(seen.has(code))dup++;seen.add(code);rows.push(o)});
+if(!rows.length)return{err:"No data rows found under the header."};
+const warn=[];if(skip)warn.push(skip+" blank/total rows skipped");if(dup)warn.push(dup+" duplicate job codes");
+const dflt=[["st","Status"],["an","Analyst"],["bu","Budgeted amount"],["rd","Date Of Rating"],["mo","Month"]].filter(x=>col[x[0]]==null).map(x=>x[1]);if(dflt.length)warn.push("defaults used for missing: "+dflt.join(", "));
+return{rows,info:rows.length+" jobs",warn}}
+function pBud(a){const map={};const hi=hdr(a,["month"],8);
+if(hi>=0){const H=a[hi].map(c=>T(c).toLowerCase()),ci=H.findIndex(h=>h.startsWith("cd")||h.includes("corporate")),si=H.findIndex(h=>h.startsWith("sme")),mi=H.indexOf("month");
+if(ci>=0&&si>=0)a.slice(hi+1).forEach(r=>{const m=MF(r[mi]);if(MO.includes(m))map[m]=[NU(r[ci]),NU(r[si])]})}
+if(!Object.keys(map).length)a.forEach(r=>{const ix=r.findIndex(c=>/^initial$/i.test(T(c)));if(ix<1)return;const m=MF(r[ix-1]);if(!MO.includes(m))return;const n=r.slice(ix+1).filter(c=>typeof c=="number");if(n.length>=4)map[m]=[n[1],n[3]]});
+const got=Object.keys(map).length;if(!got)return{err:"No monthly budget found. Use columns Month, CD & Others, SME - or the 'Initial' rows layout of the budget summary."};
+MO.forEach(m=>{if(!map[m])map[m]=[0,0]});return{map,info:got+" months of budget",warn:got<12?[(12-got)+" months missing, set to 0"]:[]}}
+function pDues(a){const hi=hdr(a,["code","code- ref","job code"],10);if(hi<0)return{err:"Header row with 'Code' not found."};
+const H=a[hi].map(c=>T(c).toLowerCase()),ci=H.findIndex(h=>["code","code- ref","job code"].includes(h)),di=H.findIndex(h=>h.includes("due")),oi=H.findIndex(h=>h.startsWith("collect"));
+if(di<0)return{err:"Column containing 'Dues' not found."};const map={};let n=0;
+a.slice(hi+1).forEach(r=>{const c=T(r[ci]);if(!c)return;map[c]={du:NU(r[di]),co:oi>=0&&r[oi]!=null?NU(r[oi]):null};n++});
+const cs=new Set(RAW.map(r=>r.code)),un=Object.keys(map).filter(c=>!cs.has(c));
+return{map,info:n+" dues rows, "+(n-un.length)+" matched to jobs",warn:un.length?[un.length+" codes not found in jobs: "+un.slice(0,5).join(", ")+(un.length>5?"...":"")]:[]}}
+function pWork(a){const hi=hdr(a,["code","code- ref","job code","client","client name"],10);if(hi<0)return{err:"Header row with 'Code' or 'Client' not found."};
+const H=a[hi].map(c=>T(c).toLowerCase()),f=(...ks)=>{for(const k of ks){const i=H.findIndex(h=>h.includes(k));if(i>=0)return i}return -1};
+const ix={code:f("code"),cl:f("client","lead name"),an:f("analyst","owner","assigned to"),stage:f("stage","task","activity"),as:f("assigned date","start","assigned"),tg:f("target","due date","deadline"),pr:f("progress","complete","%"),rm:f("remark","note")};
+const rows=[];a.slice(hi+1).forEach(r=>{const g=k=>ix[k]<0?null:r[ix[k]],code=T(g("code")),cl=T(g("cl"));if(!code&&!cl)return;let p=g("pr");p=p==null||p===""?null:(typeof p=="number"?(p<=1?p*100:p):NU(p));
+rows.push({code,cl,an:T(g("an")),stage:T(g("stage")),as:DV(g("as")),tg:DV(g("tg")),pr:p==null?null:Math.round(p),rm:T(g("rm"))})});
+return rows.length?{rows,info:rows.length+" work items",warn:[]}:{err:"No rows found."}}
+function pYoy(a){const hi=hdr(a,["month"],10);if(hi<0)return{err:"Header row with 'Month' not found."};const H=a[hi].map(c=>T(c).toLowerCase()),mi=H.indexOf("month"),rows=[],yc=H.map((h,i)=>/^\d{4}$/.test(h)?i:-1).filter(i=>i>=0);
+if(yc.length)a.slice(hi+1).forEach(r=>{const m=MF(r[mi]);if(!MO.includes(m))return;yc.forEach(i=>{if(r[i]!=null&&r[i]!=="")rows.push({y:H[i],m,t:"",j:0,a:NU(r[i])})})});
+else{const yi=H.indexOf("year"),ai=H.findIndex(h=>h.startsWith("amount")||h=="bdt"||h=="value"),ti=H.findIndex(h=>h=="type"||h=="sor"),ji=H.findIndex(h=>h.startsWith("job")||h=="no"||h=="count");
+if(yi<0||ai<0)return{err:"Need Month + Year + Amount columns, or Month with one column per year (2024, 2025...)."};
+a.slice(hi+1).forEach(r=>{const m=MF(r[mi]);if(!MO.includes(m)||r[yi]==null)return;const t=ti>=0?T(r[ti]):"";rows.push({y:T(r[yi]),m,t:/sme/i.test(t)?"SME":t?"CD":"",j:ji>=0?NU(r[ji]):0,a:NU(r[ai])})})}
+return rows.length?{rows,info:rows.length+" rows, years "+[...new Set(rows.map(r=>r.y))].sort().join(", "),warn:[]}:{err:"No valid month rows found."}}
+const PARSE={jobs:pJobs,budget:pBud,dues:pDues,work:pWork,yoy:pYoy},LG={};
+function applyAll(){RAW=DS.jobs?DS.jobs.rows:DEFRAW;B=DS.budget?DS.budget.map:DEFB;ovr();refreshFilters();run();cpn()}
+async function upl(k,inp){if(!perm("upload")){inp.value="";toast(DENY);return}const file=inp.files[0];inp.value="";if(!file)return;
+try{const r=PARSE[k](await readAOA(file));if(r.err){LG[k]="Not imported: "+r.err;dcr();return}
+snap("Upload "+k);DS[k]={name:file.name,ts:Date.now()};if(r.rows)DS[k].rows=r.rows;if(r.map)DS[k].map=r.map;
+LG[k]="Imported "+r.info+" from "+file.name+(r.warn.length?" ("+r.warn.join("; ")+")":"")+". All pages updated.";saveDS();applyAll();logA("Upload "+k,file.name+" - "+r.info);toast("Imported "+r.info,true)}catch(e){LG[k]="Not imported: "+e.message;dcr()}}
+function clr(k){if(!perm("upload"))return toast(DENY);delete DS[k];LG[k]="Data cleared.";saveDS();applyAll()}
+function clrAll(){if(!perm("upload"))return toast(DENY);DS={};Object.keys(LG).forEach(k=>delete LG[k]);saveDS();applyAll()}
+async function uplOther(inp){if(!perm("upload")){inp.value="";toast(DENY);return}const file=inp.files[0];inp.value="";if(!file)return;try{const a=await readAOA(file),nm=($("odname").value.trim()||file.name.replace(/\.\w+$/,"")),hdrI=a.findIndex(r=>r.some(c=>T(c)));
+if(hdrI<0)throw Error("File is empty");const rows=a.slice(hdrI).slice(0,2001).map(r=>r.map(T));DS.other=(DS.other||[]).filter(x=>x.name!=nm);snap("Add other data");DS.other.push({name:nm,file:file.name,ts:Date.now(),rows});logA("Add other data",nm);
+LG.other="Added '"+nm+"' ("+(rows.length-1)+" rows). See Other data in the menu.";saveDS();odr();dcr()}catch(e){LG.other="Not added: "+e.message;dcr()}}
+function delOther(i){if(!perm("upload"))return toast(DENY);snap("Delete other data");logA("Delete other data",DS.other[i].name);DS.other.splice(i,1);saveDS();odr();dcr()}
+const TP=()=>({members:[["Name","Department","Team","Role","Phone","Email"],["Rafi Ahmed","Business Development","BD Person","Analyst","01XXXXXXXXX","name@company.com"]],jobs:[["CODE- REF","Lead Name","Category Name","Bank Name","Branch Name","Date Of Rating","Valid till","Agreement Value","Collect Amount","Discount Amount","Dues Amount","vat Amount","Analyst Name","Zone","Division","District","Thana","SOR","Month","Budgeted amount","Fee Range","TYPE-JOB","SECTOR","STATUS","Bank Person Name","Bank Person Contact No","Client Contact Person","Client Contact No."],["2026-9999","Example Ltd.","SME","Example Bank PLC","Uttara","2026-01-15","2027-01-14",5750,5750,0,0,750,"Analyst Name","Corporate","Dhaka","Dhaka","Uttara","SME","January",5000,"4K to 6K","SME","Trading","WIP","","","",""]],
+budget:[["Month","CD & Others","SME"],...MO.map(m=>[m,...B[m]])],dues:[["Code","Dues","Collected"],["2026-7001",2500,24375]],
+work:[["Code","Client","Analyst","Stage","Assigned Date","Target Date","Progress %","Remarks"],["2026-7001","Atlas Footwear Limited","Analyst Name","Site visit","2026-10-01","2026-10-15",40,"Waiting for documents"]],
+yoy:[["Year","Month","Type","Jobs","Amount"],[2025,"January","SME",10,50000],[2025,"January","CD & Others",3,90000]]});
+function tpl(k){if(typeof XLSX=="undefined"){toast("Excel library failed to load");return}const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(TP()[k]),"Template");dl("ERP_template_"+k+".xlsx",new Blob([XLSX.write(wb,{bookType:"xlsx",type:"array"})]))}
+function dcr(){dcr0();if(!perm("upload")){const g=$("dcs");g.querySelectorAll&&g.querySelectorAll(".card").forEach(c=>{const h=c.querySelector("h3");if(h&&!/^(Fields|About)/.test(h.textContent))c.style.display="none"})}}
+function dcr0(){const L=[["jobs","Surveillance (jobs)","Full job list in the columns of the Template (or the Jobs Excel export). Replaces all jobs: Dashboard, Jobs, Surveillance, Dues, Renewals, Analysis and Control panel all update."],["budget","Budget","Monthly budget: the budget summary layout (Initial rows), or a table with Month, CD & Others, SME. Updates Budget vs Actual, the Dashboard chart and Year-to-year."],["dues","Dues","Table with Code and Dues (optional Collected). Matching jobs get the new dues everywhere; other jobs stay unchanged."],["work","Working","Work tracker: Code, Client, Analyst, Stage, Assigned Date, Target Date, Progress %, Remarks. Feeds the Working page."],["yoy","Year-to-year","History as Year, Month, Type, Jobs, Amount - or Month with one column per year. Feeds Year-to-year."]];
+const cur=k=>{const d=DS[k];return d?esc(d.name)+" &middot; "+new Date(d.ts).toLocaleString():{jobs:"No data yet - upload a job list",budget:"No budget yet (all zero)",dues:"Dues from the job file",work:"None - showing WIP jobs",yoy:"None uploaded"}[k]};
+const btn=k=>`<div class="f" style="margin:0"><label class="btn">Upload<input type="file" accept=".xlsx,.xls,.csv" hidden onchange="upl('${k}',this)"></label><button class="btn o" onclick="tpl('${k}')">Template</button><button class="btn o" style="${rzk=="d"+k?"background:var(--bad);color:#fff;border-color:var(--bad)":""}" onclick="rzd('${k}')">${rzk=="d"+k?"Click again to confirm":"Reset"}</button></div>`;
+$("dcs").innerHTML=syCard()+rzTop()+L.map(([k,t,d])=>`<div class="card"><h3>${t}</h3><div class="note" style="margin-top:0">${d}</div><div class="lab">Current data</div><div style="margin:2px 0 10px">${cur(k)}</div>${btn(k)}${LG[k]?`<div class="note">${esc(LG[k])}</div>`:""}</div>`).join("")+
+`<div class="card"><h3>Other data</h3><div class="note" style="margin-top:0">Any other table (first sheet, first row = headers). Stored as a named dataset and shown on the Other data page.</div>${(DS.other||[]).map((o,i)=>`<div style="margin:2px 0">${esc(o.name)} &middot; ${o.rows.length-1} rows <button class="x" onclick="delOther(${i})" title="Delete">&times;</button></div>`).join("")}<div class="f" style="margin:8px 0 0"><input id="odname" class="in" placeholder="Dataset name (optional)" style="flex:1"><label class="btn">Upload<input type="file" accept=".xlsx,.xls,.csv" hidden onchange="uplOther(this)"></label></div>${LG.other?`<div class="note">${esc(LG.other)}</div>`:""}</div>
+<div class="card"><h3>Backup &amp; restore</h3><div class="note" style="margin-top:0">Save everything stored in this browser (uploads, notes, teams, colours, status changes) to a file, and restore it on another browser or computer.</div><div class="f" style="margin:0"><button class="btn" onclick="bkp()">Download backup</button><label class="btn o">Restore backup<input type="file" accept=".json" hidden onchange="rst(this)"></label></div><div class="note">Last backup: ${ST.lb?new Date(ST.lb).toLocaleString():"never"}</div></div>
+${fdCard()}${rzCard()}${aboutCard()}`}
+function yyr(){const sel=$("yyt2").value,Y=(DS.yoy?DS.yoy.rows:[]).filter(r=>!sel||r.t==sel),yrs=[...new Set(Y.map(r=>r.y))].sort(),pal=["#9aa5b8","#7aa2f7","#b08cf5","#f0b429","#4ac2a5"];
+const hv=(y,m)=>sum(Y.filter(r=>r.y==y&&r.m==m),"a"),okT=r=>!sel||(sel=="SME"?r.ty=="SME":r.ty!="SME"),bud=m=>sel=="SME"?B[m][1]:sel=="CD"?B[m][0]:B[m][0]+B[m][1],act=m=>sum(ALL.filter(r=>r.mo==m&&okT(r)),"bu");
+const S=[...yrs.map((y,i)=>({n:y,c:pal[i%5],v:m=>hv(y,m)})),{n:"Budget",c:"var(--ac2)",v:bud},{n:"Actual",c:"var(--ac)",v:act}],last=yrs[yrs.length-1],tot=s=>MO.reduce((x,m)=>x+s.v(m),0);
+$("yyk").innerHTML=S.map(s=>`<div class="c"><span>${s.n}</span><b>${f(tot(s))}</b><i>ex-VAT</i></div>`).join("")+`<div class="c"><span>Growth vs ${last||"-"}</span><b>${last&&tot(S[yrs.length-1])?Math.round((tot(S[S.length-1])/tot(S[yrs.length-1])-1)*100)+"%":"-"}</b><i>actual vs previous year</i></div>`;
+const mx=Math.max(1,...MO.flatMap(m=>S.map(s=>s.v(m))));
+$("yyc").innerHTML=MO.map(m=>`<div title="${m}"><p>${S.map(s=>`<u style="height:${s.v(m)/mx*100}%;background:${s.c}" title="${s.n}: ${f(s.v(m))}"></u>`).join("")}</p>${m.slice(0,3)}</div>`).join("");
+$("yyl").innerHTML=S.map(s=>`<span style="display:inline-block;width:10px;height:10px;background:${s.c};margin:0 4px 0 10px"></span>${s.n}`).join("");
+const gr=(a,b)=>b?`<td class="n ${a>=b?"pos":"neg"}">${Math.round((a/b-1)*100)}%`:"<td class=n>-";
+$("yyt").innerHTML="<tr><th>Month"+S.map(s=>`<th class=n>${s.n}`).join("")+`<th class=n>Growth vs ${last||"-"}<th class=n>Achv.</tr>`+MO.map(m=>`<tr><td>${m}${S.map(s=>`<td class=n>${f(s.v(m))}`).join("")}${last?gr(act(m),hv(last,m)):"<td class=n>-"}<td class=n>${pc(act(m),bud(m))}</tr>`).join("")+`<tr class=t><td>Total${S.map(s=>`<td class=n>${f(tot(s))}`).join("")}${last?gr(tot(S[S.length-1]),tot(S[yrs.length-1])):"<td class=n>-"}<td class=n>${pc(tot(S[S.length-1]),tot(S[S.length-2]))}</tr>`;
+$("yyn").textContent=(yrs.length?"History from "+DS.yoy.name+". ":"No previous-year data yet - upload it in Control panel > Data console. ")+"Budget and Actual use the current budget and surveillance jobs (ex-VAT); Actual ignores the team/analyst filter."}
+function wkr(){const q=$("wkq").value.toLowerCase(),byc=Object.fromEntries(ALL.map(r=>[r.code,r])),tdy=TODAY.toISOString().slice(0,10);
+let W=DS.work?DS.work.rows:ALL.filter(r=>r.st=="WIP").map(r=>({code:r.code,cl:r.cl,an:r.an,stage:"WIP",as:r.rd,tg:"",pr:null,rm:""}));
+const act=D.length!=ALL.length,inD=new Set(D.map(r=>r.code));W=W.filter(w=>(!act||inD.has(w.code))&&(!q||[w.code,w.cl,w.an,w.stage,w.rm].join(" ").toLowerCase().includes(q)));
+const od=w=>w.tg&&w.tg<tdy&&(w.pr==null||w.pr<100)&&(byc[w.code]||{}).st!="Done",P=W.filter(w=>w.pr!=null);
+$("wkk").innerHTML=[["Work items",W.length],["Avg progress",P.length?Math.round(sum(P,"pr")/P.length)+"%":"-"],["Overdue",W.filter(od).length],["Due in 7 days",W.filter(w=>w.tg&&w.tg>=tdy&&w.tg<=new Date(TODAY.getTime()+7*864e5).toISOString().slice(0,10)).length]].map(x=>`<div class="c"><span>${x[0]}</span><b>${x[1]}</b><i>&nbsp;</i></div>`).join("");
+$("wkt").innerHTML="<tr><th>Code<th>Client<th>Analyst<th>Stage<th>Assigned<th>Target<th>Progress<th>Job status<th class=n>Agreement<th>Remarks</tr>"+W.map(w=>{const j=byc[w.code];return `<tr class="${j?"r":""}" data-c="${w.code}"><td>${w.code||"-"}<td>${w.cl||(j?j.cl:"-")}<td>${w.an||(j?j.an:"-")}<td>${w.stage||"-"}<td>${w.as||"-"}<td class="${od(w)?"neg":""}">${w.tg||"-"}<td style="min-width:120px">${w.pr==null?"-":`<div class="bar" style="margin:0"><div><u style="width:${Math.min(100,w.pr)}%"></u></div><s style="width:36px">${w.pr}%</s></div>`}<td>${j?st(j.st):"-"}<td class=n>${j?f(j.ag):"-"}<td>${w.rm||""}</tr>`}).join("");
+$("wkn").textContent=(DS.work?"Source: "+DS.work.name:"No Working file uploaded - showing WIP jobs from the surveillance list. Upload a work tracker in Control panel > Data console.");
+document.querySelectorAll("#wkt tr.r").forEach(tr=>tr.onclick=()=>detail(tr.dataset.c))}
+function odr(){const O=DS.other||[],s=$("odsel"),v=s.value;s.innerHTML=O.map((o,i)=>`<option value="${i}">${esc(o.name)}</option>`).join("");if(O[v])s.value=v;const o=O[s.value||0];
+$("odt").innerHTML=o?"<tr>"+o.rows[0].map(c=>`<th>${esc(c)}</th>`).join("")+"</tr>"+o.rows.slice(1).map(r=>"<tr>"+r.map(c=>`<td>${esc(c)}`).join("")+"</tr>").join(""):"";
+$("odn").textContent=o?o.rows.length-1+" rows from "+o.file+(o.rows.length>2000?" (first 2000 shown)":""):"No other data yet - add a table in Control panel > Data console > Other data."}
+const iso=d=>new Date(d).toISOString().slice(0,10),go=t=>document.querySelector('nav button[data-t="'+t+'"]').click();
+let dhs=-1;
+const CH=()=>{const cn={};ALL.forEach(r=>cn[r.code]=(cn[r.code]||0)+1);return[
+["Amounts do not add up (agreement - collected - discount - dues)","err",r=>Math.abs(r.ag-r.co-(r.dc||0)-r.du)>1],
+["Duplicate job code","err",r=>cn[r.code]>1],
+["Zero or missing agreement / fee","err",r=>!r.bu||!r.ag],
+["Report validity ends before the rating date","err",r=>r.vt&&r.rd&&r.vt<r.rd],
+["Bill collection date before 2024 or after 2026","err",r=>r.bd&&(r.bd<"2024-01-01"||r.bd>"2026-12-31")],
+["Bill collection date before the rating date","warn",r=>r.bd&&r.rd&&r.bd<r.rd],
+["Bank missing or N/A","warn",r=>!r.bk||/^n\/?a$/i.test(r.bk)],
+["No analyst assigned","warn",r=>!r.an||r.an=="Unassigned"],
+["Done job still has dues","warn",r=>r.st=="Done"&&r.du>0],
+["Cancelled job has dues or collection","warn",r=>r.st=="CANCEL"&&(r.du>0||r.co>0)],
+["No bank or client phone number","info",r=>!r.bn&&!r.cn],
+["Done job without report print date","info",r=>r.st=="Done"&&!r.pd]]};
+const SEV={err:["Error","NOT"],warn:["Warning","WIP"],info:["Info","CANCEL"]};
+function dhr(){const C=CH().map(([n,s,fn])=>({n,s,rs:ALL.filter(fn)})),aff=new Set();C.forEach(c=>c.s!="info"&&c.rs.forEach(r=>aff.add(r.code)));
+const e=C.filter(c=>c.s=="err").reduce((a,c)=>a+c.rs.length,0),w=C.filter(c=>c.s=="warn").reduce((a,c)=>a+c.rs.length,0);window.DHERR=e;
+$("dhk").innerHTML=[["Jobs checked",ALL.length,""],["Health score",pc(ALL.length-aff.size,ALL.length),aff.size+" jobs with errors/warnings"],["Errors",e,"fix first"],["Warnings",w,"review"]].map(x=>`<div class="c"><span>${x[0]}</span><b>${x[1]}</b><i>${x[2]||"&nbsp;"}</i></div>`).join("");
+$("dht").innerHTML="<tr><th>Check<th>Severity<th class=n>Jobs<th></tr>"+C.map((c,i)=>`<tr class="r" onclick="dhs=${i};dhr()"><td style="color:var(--tx)">${c.n}<td><span class="b ${SEV[c.s][1]}">${SEV[c.s][0]}</span><td class=n>${c.rs.length?`<b class="${c.s=="err"?"neg":""}">${c.rs.length}</b>`:'<span class="pos">OK</span>'}<td>${i==dhs?"&#9660;":"&#9658;"}</tr>`).join("");
+const c=C[dhs];$("dhh").textContent=c?c.n+" - "+c.rs.length+" jobs":"Click a check to list the affected jobs";
+$("dhd").innerHTML=c&&c.rs.length?"<tr><th>Code<th>Client<th>Analyst<th>Status<th>Rated<th>Bill date<th class=n>Agreement<th class=n>Collected<th class=n>Dues</tr>"+c.rs.map(x=>`<tr class="r" data-c="${x.code}"><td>${x.code}<td>${x.cl}<td>${x.an}<td>${st(x.st)}<td>${x.rd||"-"}<td>${x.bd||"-"}<td class=n>${f(x.ag)}<td class=n>${f(x.co)}<td class=n>${x.du?f(x.du):"-"}</tr>`).join(""):"";
+document.querySelectorAll("#dhd tr.r").forEach(tr=>tr.onclick=()=>detail(tr.dataset.c))}
+function nts(c){const v=(ST.nt||{})[c]||{log:[]};return `<div class="lab" style="margin-top:16px">Notes &amp; follow-up (this browser only)</div><textarea id="ntx" class="in" rows="2" placeholder="Add a note, e.g. called bank, payment promised..." style="margin-top:6px"></textarea><div class="f" style="margin:6px 0"><input id="ndt" type="date" class="in" style="width:auto" value="${v.fu||""}"><button class="btn" onclick="addNote('${c}')">Save</button>${v.fu?`<button class="btn o" onclick="clrFu('${c}')">Clear follow-up</button>`:""}</div>`+(v.log||[]).slice().reverse().map(n=>`<div style="margin:6px 0;font-size:12px"><b>${new Date(n.ts).toLocaleDateString()}</b> ${esc(n.t)}</div>`).join("")}
+function addNote(c){if(!perm("edit"))return toast(DENY);logA("Note / follow-up",c);ST.nt=ST.nt||{};const v=ST.nt[c]=ST.nt[c]||{fu:"",log:[]},t=$("ntx").value.trim();if(t)v.log.push({ts:Date.now(),t});v.fu=$("ndt").value||"";if(!v.fu&&!v.log.length)delete ST.nt[c];save();detail(c);fur();alr()}
+function clrFu(c){if(!perm("edit"))return toast(DENY);const v=(ST.nt||{})[c];if(v){v.fu="";save()}fur();alr();if(!$("dr").classList.contains("h"))detail(c)}
+function fur(){const tdy=iso(TODAY),wk=iso(TODAY.getTime()+7*864e5),byc=Object.fromEntries(ALL.map(r=>[r.code,r])),N=ST.nt||{};
+const R=Object.entries(N).filter(([c,v])=>v.fu&&byc[c]&&D.includes(byc[c])).map(([c,v])=>({c,v,j:byc[c]})).sort((a,b)=>a.v.fu>b.v.fu?1:-1);
+$("fuk").innerHTML=[["Open follow-ups",R.length],["Overdue",R.filter(x=>x.v.fu<tdy).length],["Due in 7 days",R.filter(x=>x.v.fu>=tdy&&x.v.fu<=wk).length],["Jobs with notes",Object.keys(N).length]].map(x=>`<div class="c"><span>${x[0]}</span><b>${x[1]}</b><i>&nbsp;</i></div>`).join("");
+$("fut").innerHTML="<tr><th>Follow-up date<th>Code<th>Client<th>Analyst<th class=n>Dues<th>Status<th>Latest note<th></tr>"+R.map(x=>{const l=(x.v.log||[]).slice(-1)[0];return `<tr class="r" data-c="${x.c}"><td class="${x.v.fu<tdy?"neg":""}">${x.v.fu}<td>${x.c}<td>${x.j.cl}<td>${x.j.an}<td class=n>${x.j.du?f(x.j.du):"-"}<td>${st(x.j.st)}<td>${l?esc(l.t.slice(0,70)):"-"}<td><button class="btn o" onclick="event.stopPropagation();clrFu('${x.c}')">Done</button></tr>`}).join("");
+$("fun").textContent=R.length?"Click a row for the full job and notes. Notes are saved in this browser (included in Backup).":"No follow-ups yet. Open any job (Jobs or Dues page) and add a note with a follow-up date.";
+document.querySelectorAll("#fut tr.r").forEach(tr=>tr.onclick=()=>detail(tr.dataset.c));window.FUOD=R.filter(x=>x.v.fu<tdy).length}
+function agr(){const t=iso(TODAY),age=r=>Math.max(0,Math.floor((new Date(t)-new Date(r.rd))/864e5)),R=D.filter(r=>r.du>0&&r.rd);
+const bk=[["0-30 days",0,30],["31-60 days",31,60],["61-90 days",61,90],["91-180 days",91,180],["Over 180 days",181,1e9]].map(([n,a,b])=>{const x=R.filter(r=>age(r)>=a&&age(r)<=b);return[n+" ("+x.length+" jobs)",sum(x,"du")]});
+$("dga").innerHTML=bars(bk,v=>f(v)+" ("+pc(v,sum(R,"du"))+")")+`<div class="note">Age = days since the date of rating, as of today. Total ${f(sum(R,"du"))}.</div>`}
+function bfr(){const el=Math.min(12,TODAY.getMonth()+1),bd=m=>(B[m]||[0,0])[0]+(B[m]||[0,0])[1],ac=m=>sum(D.filter(r=>r.mo==m),"bu"),S=(a,fn)=>a.reduce((s,m)=>s+fn(m),0),Y=MO.slice(0,el),fyB=S(MO,bd),fyA=S(MO,ac),yB=S(Y,bd),yA=S(Y,ac),rem=12-el,gap=fyB-fyA;
+$("bfk").innerHTML=[["Budget to date ("+el+" mo)",f(yB),"Jan - "+MO[el-1].slice(0,3)],["Actual to date",f(yA),pc(yA,yB)+" of budget"],["Full-year budget",f(fyB),""],["Booked full-year",f(fyA),pc(fyA,fyB)+" of budget"],[gap>0?"Gap to full-year budget":"Ahead of full-year budget",f(Math.abs(gap)),gap>0&&rem?f(gap/rem)+" more / month needed":""],["Run-rate projection",f(yA/el*12),"avg of "+el+" months x 12"]].map(x=>`<div class="c"><span>${x[0]}</span><b class="${x[0][0]=="G"?"neg":""}">${x[1]}</b><i>${x[2]||"&nbsp;"}</i></div>`).join("")}
+function alr(){const t=iso(TODAY),RL=D.filter(x=>x.st!="CANCEL"&&x.vt),w=DS.work?DS.work.rows.filter(x=>x.tg&&x.tg<t&&(x.pr==null||x.pr<100)).length:null;
+const loc=Object.keys(DS).length||Object.keys(ST.nt||{}).length||Object.keys(ST.ov||{}).length||ST.teams.length||ST.cust.length,dy=ST.lb?Math.floor((Date.now()-ST.lb)/864e5):null,bk=["Backup",!loc?"-":ST.lb?(dy?dy+"d ago":"today"):"Never",!loc?"nothing to back up":ST.lb?"last download":"download one now","cpn",!loc||(ST.lb&&dy<=7)?"pos":"neg"];
+const C=[["Reports expired",RL.filter(x=>x.vt<t).length,"renew now","rn"],["Expiring in 90 days",RL.filter(x=>x.vt>=t&&x.vt<=iso(TODAY.getTime()+90*864e5)).length,"renewal pipeline","rn"],["Dues on Not Done jobs",f(sum(D.filter(x=>x.st=="NOT DONE"),"du")),"collect after delivery","du"],["Overdue follow-ups",window.FUOD||0,"notes &amp; calls","fu"],["Data errors",window.DHERR||0,"check data health","dh"],["Overdue work items",w==null?"-":w,w==null?"upload Working":"past target date","wk"],bk];
+$("alr").innerHTML=C.filter(x=>!hid("a:"+x[0])).map(x=>`<div class="c" style="cursor:pointer" onclick="go('${x[3]}')"><span>${x[0]}</span><b class="${x[4]||(x[1]&&x[1]!="0"&&x[1]!="-"?"neg":"pos")}">${x[1]}</b><i>${x[2]}</i></div>`).join("")}
+async function bkp(){if(await dl("ERP_backup_"+stamp()+".json",new Blob([JSON.stringify({v:1,ST,DS})],{type:"application/json"}))){ST.lb=Date.now();save();logA("Backup downloaded","");cpn();alr()}}
+async function rst(inp){if(!perm("upload")){inp.value="";toast(DENY);return}const file=inp.files[0];inp.value="";if(!file)return;try{const o=JSON.parse(await file.text());if(!o.ST&&!o.DS)throw Error("not an ERP backup file");snap("Restore backup");ST=Object.assign({ov:{},teams:[],mem:{},cust:[],ac:null,sb:null,mode:"auto"},o.ST||{});DS=o.DS||{};save();saveDS();theme();applyAll();logA("Restore backup",file.name);toast("Backup restored",true)}catch(e){toast("Restore failed: "+e.message)}}
+const FV={},FSK=["tt","mtb","ucl","dpt"];
+function tfMatch(q,tx){q=q.trim();if(!q)return true;const m=q.match(/^(>=|<=|!=|>|<|=|!)\s*(.*)$/);
+if(m){const op=m[1],a=m[2].trim().toLowerCase(),t=tx.toLowerCase();if(op=="!"||op=="!=")return !t.includes(a);
+const nx=parseFloat(tx.replace(/[,%]/g,"")),na=parseFloat(a.replace(/,/g,"")),str=/^\d{4}-\d{2}/.test(a)||isNaN(na);
+if(str)return op=="="?t==a:op==">"?t>a:op=="<"?t<a:op==">="?t>=a:t<=a;if(isNaN(nx))return false;
+return op==">"?nx>na:op=="<"?nx<na:op==">="?nx>=na:op=="<="?nx<=na:nx==na}
+return q.toLowerCase().split("|").some(s=>s.trim()&&tx.toLowerCase().includes(s.trim()))}
+function tfApply(tb){const v=FV[tb.id]||[];let n=0,tot=0;
+[...tb.rows].slice(1).forEach(r=>{if(r.classList.contains("fr"))return;if(r.classList.contains("t")){r.style.display="";return}tot++;
+let ok=true;v.forEach((q,i)=>{if(ok&&q&&q.trim()){const c=r.cells[i];ok=!!c&&tfMatch(q,c.textContent.replace(/\s+/g," ").trim())}});r.style.display=ok?"":"none";if(ok)n++});
+if(!tb._fc){tb._fc=document.createElement("div");tb._fc.className="note fc";tb.parentNode.after(tb._fc)}
+const act=v.some(q=>q&&q.trim());tb._fc.textContent=act?"Filtered: "+n+" of "+tot+" rows shown":""}
+function tfDeco(tb){if(!tb.id||FSK.includes(tb.id)||tb._busy)return;const h=tb.rows[0];if(!h||!h.cells.length)return;tb._busy=1;
+const old=tb.rows[1];if(!(old&&old.classList.contains("fr")&&old.cells.length==h.cells.length)){
+const fr=tb.insertRow(1);fr.className="fr";[...h.cells].forEach((c,i)=>{const td=fr.insertCell();if(!c.textContent.trim())return;const inp=document.createElement("input");inp.className="in";
+inp.placeholder=c.classList.contains("n")?"> 100":"filter";inp.title="Text, a|b for OR, !x to exclude, >, <, >=, <= for numbers/dates";inp.value=(FV[tb.id]||[])[i]||"";
+inp.oninput=()=>{(FV[tb.id]=FV[tb.id]||[])[i]=inp.value;tfApply(tb)};inp.onclick=e=>e.stopPropagation();td.appendChild(inp)})}
+[...tb.rows].forEach(r=>r.classList.contains("r")&&r.setAttribute&&r.setAttribute("tabindex","0"));tfPick(tb);tfCols(tb);tfWid(tb);tfRes(tb);tfTop();tfApply(tb);tb._busy=0}
+function tfTop(){document.querySelectorAll("table").forEach(tb=>{const fr=tb.rows[1];if(fr&&fr.classList.contains("fr")){const t=tb.rows[0].offsetHeight+"px";[...fr.cells].forEach(td=>td.style.top=t)}})}
+function tfClear(){const s=[...document.querySelectorAll("main section")].find(x=>!x.classList.contains("h"));if(!s)return;s.querySelectorAll("table").forEach(tb=>{FV[tb.id]=[];tb.querySelectorAll("tr.fr input").forEach(i=>i.value="");tfApply(tb)})}
+let UNDO=null;
+function snap(l){UNDO={l,ST:JSON.stringify(ST),DS:JSON.stringify(DS)}}
+function undo(){if(!UNDO)return;const u=UNDO;UNDO=null;ST=JSON.parse(u.ST);DS=JSON.parse(u.DS);save();saveDS();theme();applyAll();logA("Undo",u.l);toast("Undone: "+u.l)}
+function logA(a,d){ST.log=ST.log||[];const en={ts:Date.now(),a,d:d||"",u:SY.uid||""};ST.log.push(en);if(SY.db&&SY.init&&ST.sh!==false&&SY.can!==false&&!SY.applying)syLog(en);if(ST.log.length>300)ST.log=ST.log.slice(-300);save();if($("lgt"))lgr()}
+async function lgr(){const L=(ST.log||[]).slice().reverse();let P={};try{const ids=[...new Set(L.map(x=>x.u).filter(Boolean))];if(SY.user&&ids.length)P=await SY.user.profiles(ids)}catch(e){}
+$("lgt").innerHTML="<tr><th>When<th>Who<th>Action<th>Details</tr>"+L.map(x=>`<tr><td>${new Date(x.ts).toLocaleString()}<td>${x.u?esc((P[x.u]&&P[x.u].name)||"Someone"):"-"}<td>${esc(x.a)}<td>${esc(x.d)}</tr>`).join("");$("lgn").textContent=L.length?L.length+" entries (the last 300 are kept). "+(syState()=="ready"?"Shared with the team.":"Stored in this browser and included in Backup."):"No activity recorded yet. Uploads, resets, status changes, notes, team changes and backups are logged here."}
+function aboutCard(){const ok=f=>{try{return !!f()}catch(e){return false}},pub=typeof claude!="undefined";
+const ck=[["Excel library (xlsx)",()=>typeof XLSX!="undefined"],["PDF library (jsPDF)",()=>window.jspdf&&window.jspdf.jsPDF],["Browser storage",()=>{localStorage.setItem("_t","1");localStorage.removeItem("_t");return true}],["Page zoom support",()=>CSS.supports("zoom","1")],["Team sharing",()=>syState()=="ready"||syState()=="readonly"]];
+return `<div class="card" style="grid-column:1/-1"><h3>About &amp; system check</h3><div class="note" style="margin-top:0">Version <b>${APP_VER}</b> &middot; build ${APP_BUILD} &middot; ${pub?"Published (claude.ai)":"Standalone"} &middot; ${ALL.length} jobs loaded &middot; today ${iso(TODAY)}</div><div style="display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:8px">${ck.map(([n,fn])=>{const r=ok(fn);return `<span>${r?'<b class="pos">&#10003;</b>':'<b class="neg">&#10007;</b>'} ${n}</span>`}).join("")}</div>${pub?"":'<div class="note">Standalone mode: data is stored in this browser only and team sharing is not available.</div>'}</div>`}
+function dfoot(){$("dfoot").innerHTML=(DS.jobs?"Jobs: "+esc(DS.jobs.name)+"<br>Uploaded "+new Date(DS.jobs.ts).toLocaleDateString():"Jobs: none uploaded yet")+"<br>v"+APP_VER+" &middot; Sharing: "+({ready:"on",readonly:"view-only",uninit:"not started",disabled:"off",off:"unavailable",connecting:"connecting"}[syState()])}
+const APP_VER="2.2.0",APP_BUILD="2026-10-15";
+const SY={links:{},roles:{},meo:null,admin:false,db:null,user:null,uid:null,state:"connecting",can:null,init:false,LS:{nt:{},ov:{},tm:"",ds:{}},metaN:{},q:Promise.resolve(),timer:null,dirty:0,applying:false,busy:0,again:0,joined:false,last:{},unsubs:[],errT:0};
+const sid=c=>{let s=String(c).replace(/[^A-Za-z0-9_\-.~:@+]/g,x=>"~"+x.charCodeAt(0).toString(16));return /^\.+$/.test(s)?"~"+s:s.slice(0,180)};
+const stamp1=(k,v)=>k=="other"?(v||[]).map(o=>o.name+":"+o.ts).join("|"):v&&v.ts;
+const srt=o=>JSON.stringify(Object.keys(o||{}).sort().map(k=>[k,o[k]]));
+function syErr(e){const now=Date.now();if(now-SY.errT<5000)return;SY.errT=now;toast("Team sync problem: "+((e&&(e.code||e.message))||"unknown")+(e&&e.code=="quota_exceeded"?" - storage is full, reset some data":""))}
+const syState=()=>ST.sh===false?"disabled":!SY.db?SY.state:!SY.init?"uninit":SY.can===false?"readonly":"ready";
+function syUI(){dfoot();if(!$("cpn").classList.contains("h"))cpn()}
+async function syStart(){if(ST.sh===false){SY.state="disabled";return}
+if(typeof claude=="undefined"){SY.state="off";return}
+try{const db=await claude.use("db");if(!db){SY.state="off";syUI();return}
+const u=await claude.use("user");SY.user=u;SY.uid=u?await u.id():null;SY.can=u?await u.can("data.write"):null;SY.meo=u?await u.me():null;SY.admin=u?await u.canEdit():false;SY.db=db;sySubs();meUI();syUI()}catch(e){SY.state="off";syUI()}}
+function sySubs(){const db=SY.db,L=SY.last={};
+const sub=(ref,key,fn)=>SY.unsubs.push(ref.onSnapshot(s=>{L[key]=fn(s);syLater()},syErr));
+SY.unsubs.push(db.doc("shared/meta").onSnapshot(s=>{const was=SY.init;SY.init=s.exists;if(was!==SY.init)syUI();if(SY.init)syLater()},syErr));
+sub(db.collection("nt"),"nt",s=>s.docs.map(d=>JSON.parse(JSON.stringify(d.data()))));
+sub(db.collection("ov"),"ov",s=>s.docs.map(d=>d.data()));
+SY.unsubs.push(db.doc("shared/teams").onSnapshot(s=>{L.tm=s.exists?JSON.parse(JSON.stringify(s.data())):null;syLater()},syErr));
+SY.unsubs.push(db.collection("links").onSnapshot(s=>{SY.links={};s.docs.forEach(d=>{const x=d.data();SY.links[x.u]=x});meSync()},syErr));SY.unsubs.push(db.collection("roles").onSnapshot(s=>{SY.roles={};s.docs.forEach(d=>{const x=d.data();SY.roles[x.u]=x.r});meSync()},syErr));
+sub(db.collection("dsm"),"dsm",s=>s.docs.map(d=>({k:d.id,...d.data()})));
+sub(db.collection("log").orderBy("ts","desc").limit(300),"log",s=>s.docs.map(d=>({...d.data()})))}
+function syStop(){SY.unsubs.forEach(f=>{try{f()}catch(e){}});SY.unsubs=[];SY.db=null;SY.state="disabled";SY.init=false;SY.joined=false}
+function syLater(){clearTimeout(SY.at);SY.at=setTimeout(()=>{if(SY.dirty)syLater();else syApply()},300)}
+async function syLoadDS(k,n){let s="";for(let i=0;i<n;i++){const d=await SY.db.doc("dsc/"+k+"_"+i).get();if(!d.exists)throw Error("missing chunk");s+=d.data().s}return JSON.parse(s)}
+async function syPutDS(k){const v=DS[k],s=JSON.stringify(v),n=Math.ceil(s.length/80000)||1,old=SY.metaN[k]||0;
+for(let i=0;i<n;i++)await SY.db.doc("dsc/"+k+"_"+i).set({s:s.slice(i*80000,(i+1)*80000)});
+await SY.db.doc("dsm/"+k).set({n,ts:stamp1(k,v),name:v.name||""});SY.metaN[k]=n;for(let i=n;i<old;i++)await SY.db.doc("dsc/"+k+"_"+i).delete()}
+async function syDelDS(k){const n=SY.metaN[k]||1;await SY.db.doc("dsm/"+k).delete();for(let i=0;i<n;i++)await SY.db.doc("dsc/"+k+"_"+i).delete();delete SY.metaN[k]}
+function syPush(){if(!SY.db||!SY.init||ST.sh===false||SY.applying||SY.can===false)return;SY.dirty=1;clearTimeout(SY.timer);SY.timer=setTimeout(()=>{SY.q=SY.q.then(syFlush).catch(syErr).then(()=>{SY.dirty=0})},500)}
+async function syFlush(){const db=SY.db,LS=SY.LS,nt=ST.nt||{},ov=ST.ov||{};if(!db)return;
+for(const c of Object.keys(nt)){const j=JSON.stringify(nt[c]);if(LS.nt[c]!==j){await db.doc("nt/"+sid(c)).set({code:c,fu:nt[c].fu||"",log:nt[c].log||[]});LS.nt[c]=j}}
+for(const c of Object.keys(LS.nt))if(!nt[c]){await db.doc("nt/"+sid(c)).delete();delete LS.nt[c]}
+for(const c of Object.keys(ov))if(LS.ov[c]!==ov[c]){await db.doc("ov/"+sid(c)).set({code:c,st:ov[c]});LS.ov[c]=ov[c]}
+for(const c of Object.keys(LS.ov))if(!ov[c]){await db.doc("ov/"+sid(c)).delete();delete LS.ov[c]}
+const tm=JSON.stringify({teams:ST.teams||[],mem:ST.mem||{},cust:ST.cust||[],depts:ST.depts||[],v:2});if(tm!==LS.tm){await db.doc("shared/teams").set(JSON.parse(tm));LS.tm=tm}
+for(const k of Object.keys(DS))if(DS[k]&&LS.ds[k]!==stamp1(k,DS[k])){await syPutDS(k);LS.ds[k]=stamp1(k,DS[k])}
+for(const k of Object.keys(LS.ds))if(!DS[k]){await syDelDS(k);delete LS.ds[k]}}
+async function syApply(){if(!SY.init||ST.sh===false)return;const L=SY.last;if(!(L.nt&&L.ov&&L.dsm&&L.log&&L.tm!==undefined))return;
+if(SY.busy){SY.again=1;return}SY.busy=1;SY.applying=true;
+try{do{SY.again=0;const nt={},ov={};L.nt.forEach(x=>nt[x.code]={fu:x.fu||"",log:x.log||[]});L.ov.forEach(x=>ov[x.code]=x.st);
+const tm=L.tm||{},v2=tm.v>=2,ntm={teams:tm.teams||[],mem:v2?(tm.mem||{}):{},cust:v2?(tm.cust||[]):[],depts:tm.depts||[],v:2},ds={},metaN={};L.dsm.forEach(m=>{ds[m.k]=m.ts;metaN[m.k]=m.n});
+const dsSig=o=>Object.keys(o).sort().map(k=>k+":"+o[k]).join("|"),cur={};Object.keys(DS).forEach(k=>cur[k]=stamp1(k,DS[k]));
+const changed=srt(ST.nt)!=srt(nt)||srt(ST.ov)!=srt(ov)||JSON.stringify({t:ST.teams,m:srt(ST.mem),c:ST.cust,d:ST.depts})!=JSON.stringify({t:ntm.teams,m:srt(ntm.mem),c:ntm.cust,d:ntm.depts})||dsSig(cur)!=dsSig(ds);
+let undoable=false;if(!SY.joined){SY.joined=true;const has=Object.keys(ST.nt||{}).length||Object.keys(ST.ov||{}).length||(ST.teams||[]).length||(ST.cust||[]).length||Object.keys(DS).length;if(changed&&has){snap("Switch to team data");undoable=true}}
+if(changed){ST.nt=nt;ST.ov=ov;ST.teams=ntm.teams;ST.mem=ntm.mem;ST.cust=ntm.cust;ST.depts=ntm.depts;Object.keys(DS).forEach(k=>{if(!(k in ds))delete DS[k]});
+for(const k of Object.keys(ds))if(!DS[k]||stamp1(k,DS[k])!==ds[k])DS[k]=await syLoadDS(k,metaN[k])}
+SY.LS={nt:Object.fromEntries(Object.entries(nt).map(([c,v])=>[c,JSON.stringify(v)])),ov:{...ov},tm:JSON.stringify(ntm),ds:{...ds}};SY.metaN=metaN;
+ensureTeams();ST.log=L.log.slice().sort((a,b)=>a.ts-b.ts);save();saveDS();
+if(changed){RAW=DS.jobs?DS.jobs.rows:DEFRAW;B=DS.budget?DS.budget.map:DEFB;ovr();refreshFilters();run();if(!$("cpn").classList.contains("h"))cpn()}else lgr();
+dfoot();if(undoable)toast("Now using shared team data",true)}while(SY.again)}catch(e){syErr(e)}finally{SY.busy=0;SY.applying=false;setTimeout(syPush,50)}}
+async function syLog(e){try{await SY.db.doc("log/"+e.ts+"_"+Math.random().toString(36).slice(2,6)).set({ts:e.ts,a:e.a,d:e.d,u:SY.uid||""});if(Math.random()<.05)syPrune()}catch(x){syErr(x)}}
+async function syPrune(){const s=await SY.db.collection("log").orderBy("ts","asc").limit(1000).get();if(s.size>400)for(const d of s.docs.slice(0,s.size-300))await SY.db.doc("log/"+d.id).delete()}
+async function syPublish(){if(!perm("upload"))return toast(DENY);if(!SY.db||SY.can===false)return;snap("Publish to team");toast("Publishing to the team...");SY.LS={nt:{},ov:{},tm:"",ds:{}};SY.applying=true;
+try{await syFlush();await SY.db.doc("shared/meta").set({init:true,ts:Date.now()});SY.init=true;SY.joined=true;logA("Published data to team","");toast("Shared with everyone who opens this link",true)}catch(e){syErr(e)}finally{SY.applying=false}syUI()}
+function syToggle(){if(ST.sh===false){ST.sh=null;save();SY.state="connecting";syStart();logA("Team sharing turned on (this device)","")}else{logA("Team sharing turned off (this device)","");ST.sh=false;save();syStop()}syUI()}
+function syCard(){const s=syState(),w=SY.can!==false,M={off:"Not available in this view - your data stays in this browser only.",connecting:"Connecting...",disabled:"Turned off on this device. Your changes stay in this browser.",uninit:w?"Not started. Publish your current data to share it with everyone who opens this link.":"Waiting for an editor to publish shared data.",ready:"On. Uploads, notes, status changes, teams and the activity log are shared with everyone who opens this link, live.",readonly:"On, view-only. You see the team's data; your own changes are not saved for others."};
+const b=(c,t,fn,red)=>`<button class="btn ${c}" ${red?'style="background:var(--bad);color:#fff;border-color:var(--bad)"':""} onclick="${fn}">${t}</button>`;
+return `<div class="card" style="grid-column:1/-1"><h3 style="margin:0 0 4px">Team sharing</h3><div class="note" style="margin:0 0 8px"><b>${{ready:"On",readonly:"View-only",uninit:"Ready to start",disabled:"Off",off:"Unavailable",connecting:"Connecting"}[s]}</b> &middot; ${M[s]}</div><div class="note" style="margin:0 0 10px">Shared: uploaded data, notes &amp; follow-ups, status changes, teams &amp; members, activity log. Personal (this device only): appearance, layout, zoom, filters, last page.</div><div class="f" style="margin:0">${s=="uninit"&&w?b("","Publish my data to team","syPublish()"):""}${s=="ready"&&w?b("o",rzk=="pub"?"Click again to confirm":"Replace team data with mine",'rzp()',rzk=="pub"):""}${SY.db||s=="disabled"?b("o",ST.sh===false?"Turn on sharing":"Turn off on this device","syToggle()"):""}</div></div>`}
+function rzp(){if(!perm("upload"))return toast(DENY);if(rzk!="pub"){rzk="pub";clearTimeout(rzt);rzt=setTimeout(()=>{rzk=null;dcr()},4000);dcr();return}clearTimeout(rzt);rzk=null;syPublish()}
+let rzk=null,rzt;
+function rzTop(){const on=rzk=="data",n=["jobs","budget","dues","work","yoy"].filter(k=>DS[k]).length+(DS.other||[]).length;
+return `<div class="card" style="grid-column:1/-1;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap"><div><h3 style="margin:0">Data status</h3><div class="note" style="margin:2px 0 0">${n?n+" uploaded dataset"+(n>1?"s":"")+" in use. Reset removes them and clears the dashboard.":"No data has been uploaded yet."}</div></div><button class="btn" ${n?"":"disabled"} style="${on?"background:var(--bad);border-color:var(--bad)":""}" onclick="rz('data')">${on?"Click again to confirm":"Reset all data"}</button></div>`}
+function rzd(k){if(!perm("upload"))return toast(DENY);if(rzk!="d"+k){rzk="d"+k;clearTimeout(rzt);rzt=setTimeout(()=>{rzk=null;dcr()},4000);dcr();return}clearTimeout(rzt);rzk=null;snap("Reset "+k+" data");clr(k);logA("Reset data",k);toast("Reset done: "+k+" data",true)}
+function rzCard(){const L=[["theme","Appearance & layout","Colours, text size, sidebar, widths and chart sizes"],["filters","Table filters","Column filters typed into any table"],["status","Status changes","Jobs whose status you changed (e.g. set to Halt)"],["notes","Notes & follow-ups","All job notes and follow-up dates"],["teams","Teams & members","Teams, member roles/contacts and members you added"],["fields","Fields & columns","Shown/hidden dashboard cards and table columns"],["data","Uploaded data","Removes all uploaded and entered data (the dashboard becomes empty)"]];
+const b=(k,l)=>`<button class="btn ${k=="all"?"":"o"}" style="${rzk==k?"background:var(--bad);color:#fff;border-color:var(--bad)":""}" onclick="rz('${k}')">${rzk==k?"Click again to confirm":l}</button>`;
+const row=(k,t,d)=>`<div style="display:flex;gap:12px;align-items:center;justify-content:space-between;padding:9px 0;border-top:1px solid var(--bd)"><div><b>${t}</b><div class="note" style="margin:0">${d}</div></div><div style="flex:none">${b(k,"Reset")}</div></div>`;
+return `<div class="card" style="grid-column:1/-1"><h3>Reset</h3><div class="note" style="margin-top:0">${syState()=="ready"?"":"Resets affect this browser only. "}Click a button twice to confirm. Download a backup first if you may need your data again.${syState()=="ready"?" <b>Team sharing is on: resets of uploaded data, notes, status changes and teams apply for everyone.</b>":""}</div>${L.map(x=>row(...x)).join("")}${row("all","Reset everything","All of the above, in one step")}</div>`}
+function rz(k){if(!perm("upload")&&["notes","status","teams","data","all"].includes(k))return toast(DENY);if(rzk!=k){rzk=k;clearTimeout(rzt);rzt=setTimeout(()=>{rzk=null;dcr()},4000);dcr();return}
+clearTimeout(rzt);rzk=null;const A=k=="all";snap("Reset "+(A?"everything":k));logA("Reset",A?"everything":k);
+if(k=="theme"||A){ST.ac=ST.sb=ST.fs=ST.dn=ST.mw=ST.kp=ST.ch=ST.sbm=ST.zm=ST.sbw=null;ST.mode="auto"}
+if(k=="teams"||A){ST.teams=[];ST.mem={};ST.cust=[];ST.depts=[];ensureTeams()}
+if(k=="notes"||A)ST.nt={};
+if(k=="status"||A)ST.ov={};
+if(k=="fields"||A){ST.hd=[];ST.fj=null;ST.hc={};ST.cw={};FV.jt=[]}
+if(k=="filters"||A){Object.keys(FV).forEach(x=>FV[x]=[]);document.querySelectorAll("tr.fr input").forEach(i=>i.value="")}
+if(k=="data"||A){DS={};Object.keys(LG).forEach(x=>delete LG[x]);saveDS()}
+if(A){$("gan").value="";$("gtm").value="";$("gdp").value="";svf="";dhs=-1;$("dr").classList.add("h")}
+save();theme();applyAll();toast("Reset done: "+(A?"everything":{fields:"fields & columns",theme:"appearance & layout",filters:"table filters",status:"status changes",notes:"notes & follow-ups",teams:"teams & members",data:"uploaded data"}[k]),true)}
+const ZS=[50,67,75,80,90,100,110,125,150,175,200];
+function zmStep(d){const c=parseFloat(ST.zm||"100");let i=ZS.reduce((b,v,k)=>Math.abs(v-c)<Math.abs(ZS[b]-c)?k:b,0);i=d==0?5:Math.max(0,Math.min(ZS.length-1,i+d));ST.zm=i==5?null:ZS[i];save();theme();cpn();toast("Zoom: "+ZS[i]+"%");setTimeout(tfTop,50)}
+const SZ=["11px","12px","13px","14px","15px","17px","20px","22px"];
+function fsStep(d){let i=SZ.indexOf(ST.fs||"13px");if(i<0)i=2;if(d==0)i=2;else i=Math.max(0,Math.min(SZ.length-1,i+d));ST.fs=i==2?null:SZ[i];save();theme();cpn();toast("Text size: "+SZ[i]+(i==2?" (default)":""));setTimeout(tfTop,50)}
+const JC=[["code","Code"],["cl","Client"],["cat","Category"],["bk","Bank"],["br","Branch"],["an","Analyst"],["ty","Type"],["mo","Month"],["jt","Job type"],["sec","Sector"],["zn","Zone"],["dv","Division"],["dis","District"],["th","Thana"],["rd","Rated"],["vt","Valid till"],["pd","Report print"],["bd","Bill collection"],["ow","Fee range"],["ag","Agreement","n"],["co","Collected","n"],["dc","Discount","n"],["du","Dues","n"],["vat","VAT","n"],["bu","Fee ex-VAT","n"],["st","Status"],["bc","Bank contact"],["bn","Bank phone"],["cc","Client contact"],["cn","Client phone"]],JD=["code","cl","bk","an","ty","mo","rd","ag","co","du","st"];
+const KPIL=["Total jobs","Agreement value","Collected","Outstanding dues","VAT","Discounts","Avg fee / job","Banks / clients"],ATL=["Reports expired","Expiring in 90 days","Dues on Not Done jobs","Overdue follow-ups","Data errors","Overdue work items","Backup"],WL=[["chart","Budget vs actual chart"],["status","Jobs by status"],["clients","Top 10 clients"],["banks","Top 10 banks"]];
+const hid=id=>(ST.hd||[]).includes(id);
+const jv=(x,c)=>c[0]=="st"?st(x.st):c[2]?(c[0]=="du"&&!x.du?"-":f(x[c[0]]||0)):esc(x[c[0]]||"-");
+function wsh(){document.querySelectorAll("#ov [data-w]").forEach(el=>el.style.display=hid("w:"+el.dataset.w)?"none":"")}
+function fdT(k,key,on){ST.hd=ST.hd||[];const id=k+":"+key,i=ST.hd.indexOf(id);if(on&&i>=0)ST.hd.splice(i,1);if(!on&&i<0)ST.hd.push(id);save();run()}
+function fdJ(key,on){let s=(ST.fj||JD).slice();s=on?[...new Set([...s,key])]:s.filter(x=>x!=key);if(!s.length)s=["code"];ST.fj=s;FV.jt=[];save();run()}
+function fdC(inp){const id=inp.dataset.t,n=inp.dataset.n;ST.hc=ST.hc||{};let a=ST.hc[id]||[];a=inp.checked?a.filter(x=>x!=n):[...new Set([...a,n])];ST.hc[id]=a;save();tfCols($(id))}
+function fdAll(){ST.hd=[];ST.fj=JC.map(c=>c[0]);ST.hc={};FV.jt=[];save();run();cpn();toast("Showing every field")}
+function fdReset(){ST.hd=[];ST.fj=null;ST.hc={};ST.cw={};FV.jt=[];save();run();cpn();toast("Fields reset to default")}
+function fdCard(){const cb=(l,on,fn)=>`<label class="fdl"><input type="checkbox" ${on?"checked":""} onchange="${fn}"> ${l}</label>`,grp=(t,a)=>`<div class="lab" style="margin:12px 0 4px">${t}</div><div class="fdg">${a.join("")}</div>`;
+return `<div class="card" style="grid-column:1/-1"><h3>Fields &amp; display</h3><div class="note" style="margin-top:0">Choose which fields appear on the dashboard and in the Jobs table. Every other table also has a <b>Columns</b> button above it. These choices are personal to this device.</div>`
++grp("Dashboard summary cards",KPIL.map(n=>cb(n,!hid("k:"+n),`fdT('k','${n}',this.checked)`)))
++grp("Attention needed cards",ATL.map(n=>cb(n,!hid("a:"+n),`fdT('a','${n}',this.checked)`)))
++grp("Dashboard panels",WL.map(([k,n])=>cb(n,!hid("w:"+k),`fdT('w','${k}',this.checked)`)))
++grp("Jobs table fields",JC.map(([k,n])=>cb(n,(ST.fj||JD).includes(k),`fdJ('${k}',this.checked)`)))
++`<div class="f" style="margin:14px 0 0"><button class="btn o" onclick="fdAll()">Show everything</button><button class="btn o" onclick="fdReset()">Reset to default</button></div></div>`}
+const DENY="Your role does not allow this action.",ROLEDESC={Admin:"Admins (editors and owners of this page) can upload and reset data, manage teams and users, and see everyone.",Manager:"Managers see their own team and themselves, and can edit notes, status and teams.",Member:"Members see only their own jobs and can edit notes and status.",Viewer:"Viewers have read-only access."},PERM={Admin:["edit","upload","teams","users"],Manager:["edit","teams"],Member:["edit"],Viewer:[]},SCOPES={Admin:["all","team","me"],Manager:["team","me"],Member:["me"],Viewer:["all","team","me"]};
+function myRole(){if(!SY.db||!SY.uid)return"Admin";if(SY.admin)return"Admin";if(SY.can===false)return"Viewer";return SY.roles[SY.uid]||"Member"}
+const perm=a=>(PERM[myRole()]||[]).includes(a);
+function effScope(){const al=SCOPES[myRole()];return al.includes(ST.sc)?ST.sc:(al.includes("all")?"all":al[0])}
+function meUI(){const s=effScope(),al=SCOPES[myRole()];
+document.querySelectorAll("#scp button").forEach(b=>{const k=b.dataset.s;b.classList.toggle("on",k==s);b.disabled=!al.includes(k)||(k!="all"&&!ST.me);b.onclick=()=>{ST.sc=k;save();refreshFilters();run();meUI()}});
+const u=$("usr");u.textContent="\u{1F464} "+(ST.me||(SY.meo&&SY.meo.name)||"Sign in")+" \u00B7 "+myRole();u.onclick=()=>pfOpen();permUI()}
+function meSync(){const l=SY.links[SY.uid];if(l&&l.m&&l.m!==ST.me){ST.me=l.m;save()}meUI();refreshFilters();run();if(!$("cpn").classList.contains("h"))cpn();
+if(!ST.me&&!SCOPES[myRole()].includes("all")&&$("pf").classList.contains("h"))pfOpen(true)}
+function meInit(){meUI();if(!ST.me&&!ST.pfx&&names().length)setTimeout(()=>{if(!ST.me)pfOpen(true)},500)}
+function pfClose(skip){if(skip){ST.pfx=true;save()}$("pf").classList.add("h")}
+function pfOpen(first){const al=SCOPES[myRole()],must=!al.includes("all")&&!ST.me,opts=['<option value="">- not listed / none -</option>'].concat(people().map(n=>`<option ${n==ST.me?"selected":""}>${esc(n)}</option>`)).join("");
+$("pf").innerHTML=`<div role="dialog" aria-label="Sign in"><h3 style="font-size:1.15em;margin:0 0 4px">${first?"Welcome - who are you?":"Profile &amp; sign in"}</h3><div class="note" style="margin:0 0 10px">${SY.meo&&SY.meo.name?"Signed in as <b>"+esc(SY.meo.name)+"</b>.":"No account in this view (standalone)."} Choose your name so the dashboard can show your own jobs and your team.</div><div class="lab">I am</div><select id="pfs" class="in" style="margin:4px 0 12px">${opts}</select><div class="note">Role: <b>${myRole()}</b>. ${ROLEDESC[myRole()]}</div><div class="note">This filters what you see - it is not a password. The job data is inside the page, so control access by who you share the link with.</div><div class="f" style="margin:12px 0 0"><button class="btn" onclick="pfSave()">Save</button>${must?"":`<button class="btn o" onclick="pfClose(true)">${first?"Skip for now":"Cancel"}</button>`}</div></div>`;$("pf").classList.remove("h")}
+function pfSave(){const v=$("pfs").value;ST.me=v||null;ST.pfx=true;save();if(SY.db&&SY.uid&&SY.can!==false)SY.db.doc("links/"+sid(SY.uid)).set({u:SY.uid,m:v||"",ts:Date.now()}).catch(syErr);logA("Profile linked",v||"none");pfClose();meUI();refreshFilters();run();cpn()}
+async function uar(){const r=myRole();$("mep").innerHTML=`<div class="note" style="margin:0 0 8px">Signed in as <b>${esc((SY.meo&&SY.meo.name)||"local profile")}</b> &middot; role <b>${r}</b> &middot; member <b>${esc(ST.me||"not linked")}</b> &middot; showing <b>${{all:"everyone",team:"my team",me:"only me"}[effScope()]}</b></div><div class="note" style="margin:0 0 8px">${ROLEDESC[r]}</div><div class="f" style="margin:0"><button class="btn" onclick="pfOpen()">Change my member / profile</button></div>`;
+$("mep").insertAdjacentHTML("beforeend",matHTML());const w=$("ucw");w.style.display=perm("users")?"":"none";if(!perm("users"))return;
+const ids=[...new Set([...Object.keys(SY.links),...Object.keys(SY.roles)])];let P={};try{if(SY.user&&ids.length)P=await SY.user.profiles(ids)}catch(e){}
+$("ucl").innerHTML="<tr><th>User<th>Linked member<th>Role</tr>"+ids.map(u=>{const rl=SY.roles[u]||"Member",l=SY.links[u]||{};return `<tr><td>${esc((P[u]&&P[u].name)||"Someone")}${u==SY.uid?" (you)":""}<td>${esc(l.m||"-")}<td><select class="in" onchange="setRole('${u}',this.value)">${["Manager","Member","Viewer"].map(x=>`<option ${x==rl?"selected":""}>${x}</option>`).join("")}</select></tr>`}).join("");
+$("ucn").textContent=SY.db?(ids.length?"Editors and owners of this page always act as Admin. Everyone else gets the role set here (default Member).":'No one has linked their name yet. Users appear here after they choose "I am" in their profile.'):"Turn on Team sharing to manage users and roles."}
+function setRole(u,r){if(!perm("users"))return;SY.db&&SY.db.doc("roles/"+sid(u)).set({u,r}).catch(syErr);logA("Role set",r)}
+function mvr(){const r=myRole(),all=people(),mm=ST.me,mt=mm?tmOf(mm):"",tn=id=>id?((ST.teams.find(x=>x.id==id)||{}).name||id):"Unassigned";
+const pO=r=="Member"?(mm?[mm]:[]):r=="Manager"?all.filter(n=>n==mm||(mt&&tmOf(n)==mt)):all,ps=$("mvp"),ts=$("mvt"),pv=(ST.me&&ST.mvl!==ST.me&&(ST.mvl=ST.me))?ST.me:$("mvp").value,tv=ts.value;
+ps.innerHTML=pO.map(n=>`<option>${esc(n)}</option>`).join("");ps.value=pO.includes(pv)?pv:(pO.includes(mm)?mm:(pO[0]||""));
+const P=ps.value,tO=r=="Manager"?(mt?[mt]:[]):[...ST.teams.map(x=>x.id),""];
+ts.innerHTML=tO.map(id=>`<option value="${id}">${esc(tn(id))}</option>`).join("");const T=(ST.mvu&&tO.includes(tv))?tv:(tO.includes(tmOf(P))?tmOf(P):(tO[0]||""));ts.value=T;
+$("mvtm").style.display=r=="Member"?"none":"";ts.style.display=r=="Member"?"none":"";
+const tdy=iso(TODAY),nn=(rs,s)=>rs.filter(x=>x.st==s).length,kp=rs=>{const fu=Object.entries(ST.nt||{}).filter(([c,v])=>v.fu&&v.fu<tdy&&rs.some(x=>x.code==c)).length;return[["Jobs",rs.length,nn(rs,"Done")+" done &middot; "+nn(rs,"WIP")+" WIP &middot; "+nn(rs,"NOT DONE")+" not done"],["Agreement value",f(sum(rs,"ag")),"incl. VAT"],["Collected",f(sum(rs,"co")),pc(sum(rs,"co"),sum(rs,"ag"))+" of value"],["Dues",f(sum(rs,"du")),rs.filter(x=>x.du>0).length+" jobs"],["Reports expired",rs.filter(x=>x.st!="CANCEL"&&x.vt&&x.vt<tdy).length,"need renewal"],["Overdue follow-ups",fu,"notes &amp; calls"]]},card=a=>a.map(x=>`<div class="c"><span>${x[0]}</span><b>${x[1]}</b><i>${x[2]}</i></div>`).join("");
+const J=P?ALL.filter(x=>x.an==P):[],TJ=ALL.filter(x=>tmOf(x.an)==T),TM=all.filter(n=>tmOf(n)==T);
+$("mvh1").textContent="Person: "+(P||"none selected");$("mvk").innerHTML=card(kp(J));$("mvh2").textContent="Team: "+tn(T);$("mvk2").innerHTML=card(kp(TJ));
+$("mvj").innerHTML="<tr><th>Code<th>Client<th>Bank<th>Status<th>Valid till<th class=n>Agreement<th class=n>Collected<th class=n>Dues</tr>"+J.map(x=>`<tr class="r" data-c="${x.code}"><td>${x.code}<td>${esc(x.cl)}<td>${esc(x.bk||"-")}<td>${st(x.st)}<td>${x.vt||"-"}<td class=n>${f(x.ag)}<td class=n>${f(x.co)}<td class=n>${x.du?f(x.du):"-"}</tr>`).join("");
+$("mvm").innerHTML="<tr><th>Member<th>Role<th class=n>Jobs<th class=n>Agreement<th class=n>Collected<th class=n>Collect %<th class=n>Dues<th class=n>Done<th class=n>WIP<th class=n>Not done</tr>"+TM.map(n=>{const rs=ALL.filter(x=>x.an==n);return`<tr><td>${esc(n)}<td>${esc((ST.mem[n]||{}).role||"-")}<td class=n>${rs.length}<td class=n>${f(sum(rs,"ag"))}<td class=n>${f(sum(rs,"co"))}<td class=n>${pc(sum(rs,"co"),sum(rs,"ag"))}<td class=n>${sum(rs,"du")?f(sum(rs,"du")):"-"}<td class=n>${nn(rs,"Done")}<td class=n>${nn(rs,"WIP")}<td class=n>${nn(rs,"NOT DONE")}</tr>`}).join("");
+$("mvn").textContent=ST.me?"":"Link your name in Profile (top bar) to open your own view by default.";
+document.querySelectorAll("#mvj tr.r").forEach(tr=>tr.onclick=()=>detail(tr.dataset.c))}
+let JE="";
+const JF=[["code","Job code"],["cl","Client"],["bk","Bank"],["br","Branch"],["an","Analyst"],["cat","Category"],["ty","Type"],["mo","Budget month"],["st","Status"],["jt","Job type"],["sec","Sector"],["rd","Date of rating","d"],["vt","Valid till","d"],["ag","Agreement value (incl. VAT)","n"],["co","Collected","n"],["dc","Discount","n"],["du","Dues","n"],["vat","VAT","n"],["bu","Fee ex-VAT","n"],["zn","Zone"],["dv","Division"],["dis","District"],["bc","Bank contact"],["bn","Bank phone"],["cc","Client contact"],["cn","Client phone"]];
+function jobEdit(c){if(!perm("upload"))return toast(DENY);JE=c||"";const x=c?(RAW.find(r=>r.code==c)||{}):{},ne=!c;
+const so=(k,a,v)=>`<select class="in" id="jf_${k}">${a.map(o=>`<option ${o==v?"selected":""}>${esc(o)}</option>`).join("")}</select>`;
+$("pf").innerHTML=`<div role="dialog" aria-label="Job" style="width:min(720px,94vw)"><h3 style="font-size:1.15em;margin:0 0 10px">${ne?"Add job":"Edit job "+esc(c)}</h3><div class="jfg">`+JF.map(([k,l,t])=>{const v=x[k]==null?"":x[k];
+const inp=k=="ty"?so(k,["SME","CD & Others"],v||"SME"):k=="mo"?so(k,[...MO,"CF"],v||MO[new Date().getMonth()]):k=="st"?so(k,["Done","WIP","NOT DONE","CANCEL","Halt"],v||"WIP"):`<input class="in" id="jf_${k}" type="${t=="d"?"date":t=="n"?"number":"text"}" ${t=="n"?'step="any"':""} value="${esc(v)}" ${k=="code"&&!ne?"readonly":""}>`;
+return`<label class="jfl"><span class="lab">${l}</span>${inp}</label>`}).join("")+`</div><div class="note" id="jfe" style="color:var(--bad)"></div><div class="f" style="margin:12px 0 0"><button class="btn" onclick="jobSave()">Save</button><button class="btn o" onclick="pfClose()">Cancel</button>${ne?"":'<button class="btn o" style="margin-left:auto;color:var(--bad)" onclick="jobDel()">Delete job</button>'}</div></div>`;$("pf").classList.remove("h")}
+function jobSave(){const g=k=>{const e=$("jf_"+k);return e?String(e.value).trim():""},code=g("code"),cl=g("cl"),ne=!JE;
+if(!code||!cl){$("jfe").textContent="Job code and client name are required.";return}
+if(ne&&RAW.some(r=>r.code==code)){$("jfe").textContent="A job with this code already exists.";return}
+snap(ne?"Add job":"Edit job");if(!DS.jobs)DS.jobs={name:"Entered in app",ts:0,rows:RAW.map(r=>({...r}))};
+const rows=DS.jobs.rows,i=rows.findIndex(r=>r.code==code),row=i>=0?{...rows[i]}:{};
+JF.forEach(([k,l,t])=>{const v=g(k);if(t=="n")row[k]=Math.round(NU(v)*100)/100;else if(v)row[k]=v;else delete row[k]});
+row.ag=row.ag||0;row.dc=row.dc||0;const nb=k=>g(k)==="";
+if(nb("du")&&!nb("co"))row.du=Math.max(0,row.ag-row.co-row.dc);else if(nb("co")&&!nb("du"))row.co=Math.max(0,row.ag-row.du-row.dc);else if(nb("co")&&nb("du")){row.co=0;row.du=Math.max(0,row.ag-row.dc)}
+if(nb("bu"))row.bu=Math.round(row.ag/1.075*100)/100;if(!row.an)row.an="Unassigned";row.rd=row.rd||"";
+if(i>=0)rows[i]=row;else rows.push(row);DS.jobs.ts=Date.now();if(ST.ov&&ST.ov[code]){delete ST.ov[code];save()}
+saveDS();logA(ne?"Job added":"Job edited",code);applyAll();pfClose();toast("Job saved",true)}
+function jobDel(){if(!perm("upload")||!JE)return;snap("Delete job");const c=JE;DS.jobs.rows=DS.jobs.rows.filter(r=>r.code!=c);DS.jobs.ts=Date.now();saveDS();logA("Job deleted",c);$("dr").classList.add("h");applyAll();pfClose();toast("Job deleted",true)}
+function bgEdit(){if(!perm("upload"))return toast(DENY);
+$("pf").innerHTML=`<div role="dialog" aria-label="Budget"><h3 style="font-size:1.15em;margin:0 0 4px">Edit budget</h3><div class="note" style="margin:0 0 8px">Monthly budget, ex-VAT (BDT).</div><table style="white-space:normal"><tr><th>Month<th class=n>CD &amp; Others<th class=n>SME</tr>${MO.map((m,i)=>`<tr><td>${m}<td><input class="in" type="number" step="any" id="bg_${i}_0" value="${(B[m]||[0,0])[0]}"><td><input class="in" type="number" step="any" id="bg_${i}_1" value="${(B[m]||[0,0])[1]}"></tr>`).join("")}</table><div class="f" style="margin:12px 0 0"><button class="btn" onclick="bgSave()">Save</button><button class="btn o" onclick="pfClose()">Cancel</button></div></div>`;$("pf").classList.remove("h")}
+function bgSave(){snap("Edit budget");const map={};MO.forEach((m,i)=>map[m]=[NU($("bg_"+i+"_0").value),NU($("bg_"+i+"_1").value)]);DS.budget={name:"Entered in app",ts:Date.now(),map};saveDS();logA("Budget edited","");applyAll();pfClose();toast("Budget saved",true)}
+function onb(){const el=$("onb");if(ALL.length){el.innerHTML="";return}const a=perm("upload");
+el.innerHTML=`<div class="card" style="margin-bottom:14px"><h3 style="font-size:1.1em">Welcome - no data yet</h3><div class="note" style="margin:0 0 10px">${a?"Upload your surveillance job list to start. You can also upload the budget, dues, working and year-to-year data later, or add jobs one by one. Every page updates automatically.":"No data has been loaded yet. Ask an admin to upload the job list."}</div>${a?'<div class="f" style="margin:0"><label class="btn">Upload job list<input type="file" accept=".xlsx,.xls,.csv" hidden onchange="upl(\'jobs\',this)"></label><label class="btn o">Upload budget<input type="file" accept=".xlsx,.xls,.csv" hidden onchange="upl(\'budget\',this)"></label><button class="btn o" onclick="tpl(\'jobs\')">Job list template</button><button class="btn o" onclick="jobEdit(\'\')">+ Add a job</button></div>':""}</div>`}
+const PM={upl:"upload",uplOther:"upload",delOther:"upload",clr:"upload",rzd:"upload",rzp:"upload",syPublish:"upload",jobEdit:"upload",jobSave:"upload",jobDel:"upload",bgEdit:"upload",bgSave:"upload",rst:"upload",clrAll:"upload",addTeam:"teams",delTeam:"teams",setTeam:"teams",addMember:"teams",delMember:"teams",setMem:"teams",toOther:"teams",setSt:"edit",addDept:"teams",delDept:"teams",setDept:"teams",memClear:"teams",memImport:"teams",memPaste:"teams",memFile:"teams",addNote:"edit",clrFu:"edit",setRole:"users"},PMR={upload:"Admin",teams:"Manager or Admin",edit:"Member, Manager or Admin",users:"Admin"};
+function permUI(){const r=myRole();document.querySelectorAll("[onclick],[onchange]").forEach(el=>{const s=el.getAttribute("onclick")||el.getAttribute("onchange")||"",m=s.match(/^\s*(?:event\.stopPropagation\(\);)?([A-Za-z_$][\w$]*)\(([^)]*)/);if(!m)return;let need=PM[m[1]];
+if(m[1]=="rz"&&/['"](notes|status|teams|data|all)['"]/.test(m[2]))need="upload";if(!need)return;const ok=perm(need),tip="Needs "+PMR[need]+" - your role is "+r;
+el.disabled=!ok;el.classList.toggle("dis",!ok);el.setAttribute("aria-disabled",ok?"false":"true");if(!ok)el.title=tip;else if(el.title&&el.title.startsWith("Needs "))el.title="";
+const p=el.tagName=="INPUT"&&el.parentNode;if(p&&p.classList){p.classList.toggle("dis",!ok);if(!ok)p.title=tip}})}
+let _pt;const _po=new MutationObserver(()=>{clearTimeout(_pt);_pt=setTimeout(permUI,40)});
+const MAT=[["See everyone",r=>SCOPES[r].includes("all")],["See their team",r=>SCOPES[r].includes("team")],["See only their own jobs",r=>SCOPES[r].includes("me")],["Edit notes, follow-ups, job status",r=>PERM[r].includes("edit")],["Edit teams & members",r=>PERM[r].includes("teams")],["Upload / add / edit data and budget",r=>PERM[r].includes("upload")],["Reset or restore data",r=>PERM[r].includes("upload")],["Manage users & roles",r=>PERM[r].includes("users")],["Appearance, fields, zoom, exports",()=>true]];
+function matHTML(){const R=["Admin","Manager","Member","Viewer"],me=myRole();return`<table style="white-space:normal;margin-top:12px"><tr><th>What each role can do${R.map(r=>`<th class=n style="${r==me?"color:var(--ac)":""}">${r}${r==me?" (you)":""}`).join("")}</tr>${MAT.map(([l,fn])=>`<tr><td>${l}${R.map(r=>`<td class=n style="${r==me?"background:var(--hv)":""}">${fn(r)?'<b class="pos">&#10003;</b>':'<span style="color:var(--mu)">-</span>'}`).join("")}</tr>`).join("")}</table>`}
+let CML=[];
+function cmFile(k){const i=document.createElement("input");i.type="file";i.accept=".xlsx,.xls,.csv";i.onchange=()=>upl(k,i);i.click()}
+function cmAll(){const nv=[...document.querySelectorAll("nav button")].map(b=>["Go to "+b.textContent.replace(/^\W+/,"").trim(),null,()=>b.click()]);
+return[...nv,["Add job","upload",()=>jobEdit("")],["Edit budget","upload",bgEdit],["Upload job list","upload",()=>cmFile("jobs")],["Upload budget file","upload",()=>cmFile("budget")],["Upload dues file","upload",()=>cmFile("dues")],["Put unassigned members in Other","teams",toOther],["Export to Excel",null,xl],["Export to PDF",null,pdf],["Print this page",null,prt],["Copy table",null,()=>$("cp").click()],["Clear table filters",null,tfClear],["Zoom in",null,()=>zmStep(1)],["Zoom out",null,()=>zmStep(-1)],["Reset zoom",null,()=>zmStep(0)],["Larger text",null,()=>fsStep(1)],["Smaller text",null,()=>fsStep(-1)],["Show / hide sidebar",null,()=>$("sbt").click()],["Profile & sign in",null,()=>pfOpen()],["Download backup",null,bkp],["Reset appearance to default",null,resetTheme]]}
+function cmOpen(){$("cm").innerHTML='<div role="dialog" aria-label="Commands" style="width:min(520px,94vw)"><input id="cmq" class="in" placeholder="Type a command... (Enter runs the first one)" autocomplete="off"><div id="cml" style="margin-top:8px;max-height:55vh;overflow:auto"></div><div class="note">Commands your role cannot use are greyed out. Esc closes.</div></div>';$("cm").classList.remove("h");const q=$("cmq");q.oninput=cmFilter;q.onkeydown=e=>{if(e.key=="Enter"){const i=CML.findIndex(c=>!c.off);if(i>=0)cmGo(i)}};cmFilter();setTimeout(()=>q.focus&&q.focus(),0)}
+function cmFilter(){const q=($("cmq").value||"").toLowerCase();CML=cmAll().map(([n,p,fn])=>({n,p,fn,off:!!p&&!perm(p)})).filter(c=>c.n.toLowerCase().includes(q));
+$("cml").innerHTML=CML.map((c,i)=>`<button class="cmi" ${c.off?"disabled":""} onclick="cmGo(${i})" title="${c.off?"Needs "+PMR[c.p]+" - your role is "+myRole():""}">${esc(c.n)}</button>`).join("")||'<div class="note">No matching command</div>'}
+function cmGo(i){const c=CML[i];if(!c||c.off)return;$("cm").classList.add("h");setTimeout(()=>c.fn(),0)}
+const BT=["t_bd","t_ot"];
+function ensureTeams(){let ch=false;if(!Array.isArray(ST.teams))ST.teams=[];[["t_bd","BD Person"],["t_ot","Other"]].forEach(([id,n],i)=>{if(!ST.teams.some(x=>x.id==id)){ST.teams.splice(i,0,{id,name:n,lead:""});ch=true}});return ch}
+function toOther(){if(!perm("teams"))return toast(DENY);names().forEach(n=>{if(!tmOf(n)){ST.mem[n]=ST.mem[n]||{};ST.mem[n].team="t_ot"}});logA("Unassigned members put in Other","");chg()}
+function tmr(){const ts=[...ST.teams.map(x=>({id:x.id,name:x.name,lead:x.lead||""})),{id:"",name:"Unassigned",lead:""}],Nn=names(),tot=sum(D,"ag")||1;
+const R=ts.map(t=>{const ms=Nn.filter(n=>tmOf(n)==t.id),rs=D.filter(r=>tmOf(r.an)==t.id);return{t,ms,rs,ag:sum(rs,"ag"),co:sum(rs,"co"),du:sum(rs,"du")}});
+$("tmk").innerHTML=R.map(x=>`<div class="c"><span>${esc(x.t.name)}</span><b>${x.rs.length}</b><i>jobs &middot; ${x.ms.length} members &middot; ${pc(x.ag,tot)} of value</i></div>`).join("");
+$("tmc").innerHTML=bars(R.map(x=>[x.t.name,x.ag]));
+const dn=(rs,s)=>rs.filter(r=>r.st==s).length;
+$("tmt").innerHTML="<tr><th>Team<th>Lead<th class=n>Members<th class=n>Jobs<th class=n>Agreement<th class=n>Collected<th class=n>Collect %<th class=n>Dues<th class=n>Done<th class=n>WIP<th class=n>Not done<th class=n>Avg fee (ex-VAT)</tr>"+R.map(x=>`<tr><td>${esc(x.t.name)}<td>${esc(x.t.lead||"-")}<td class=n>${x.ms.length}<td class=n>${x.rs.length}<td class=n>${f(x.ag)}<td class=n>${f(x.co)}<td class=n>${pc(x.co,x.ag)}<td class=n>${x.du?f(x.du):"-"}<td class=n>${dn(x.rs,"Done")}<td class=n>${dn(x.rs,"WIP")}<td class=n>${dn(x.rs,"NOT DONE")}<td class=n>${x.rs.length?f(sum(x.rs,"bu")/x.rs.length):"-"}</tr>`).join("");
+$("tmm").innerHTML="<tr><th>Team<th>Department<th>Member<th>Role<th class=n>Jobs<th class=n>Agreement<th class=n>Collected<th class=n>Collect %<th class=n>Dues<th class=n>Done</tr>"+R.flatMap(x=>x.ms.map(n=>{const rs=D.filter(r=>r.an==n),m=ST.mem[n]||{};return `<tr><td>${esc(x.t.name)}<td>${esc((ST.depts.find(d=>d.id==deptOf(n))||{}).name||"-")}<td>${esc(n)}<td>${esc(m.role||"-")}<td class=n>${rs.length}<td class=n>${f(sum(rs,"ag"))}<td class=n>${f(sum(rs,"co"))}<td class=n>${pc(sum(rs,"co"),sum(rs,"ag"))}<td class=n>${sum(rs,"du")?f(sum(rs,"du")):"-"}<td class=n>${dn(rs,"Done")}</tr>`})).join("");
+$("tmn").textContent="Jobs are counted by the team of the job's analyst, matched by name. Build the member list in Control panel > Team members (add, paste, upload, or import analysts from the job data)."}
+function tfWid(tb){const s=(ST.cw||{})[tb.id],h=tb.rows[0];if(!h)return;const nm=[...h.cells].map(c=>c.textContent.trim());
+if(!s||!nm.every(n=>!n||s[n])){if(tb._fx){tb.style.tableLayout="";tb.style.width="";tb._fx=false;[...h.cells].forEach(c=>c.style.width="")}return}
+let sum=0;[...h.cells].forEach((c,i)=>{const w=c.style.display=="none"?0:(s[nm[i]]||80);c.style.width=w+"px";sum+=w});tb.style.tableLayout="fixed";tb.style.width=sum+"px";tb._fx=true}
+function tfRes(tb){const h=tb.rows[0];if(!h)return;[...h.cells].forEach((c,i)=>{if(c.querySelector&&c.querySelector(".rzh"))return;const g=document.createElement("span");g.className="rzh";g.title="Drag to resize this column";
+g.onclick=e=>e.stopPropagation();
+g.onpointerdown=e=>{e.preventDefault();e.stopPropagation();g.setPointerCapture&&g.setPointerCapture(e.pointerId);const z=parseFloat(ST.zm||"100")/100,cs=[...h.cells],ws=cs.map(x=>x.offsetWidth/z),x0=e.clientX,w0=ws[i];
+tb.style.tableLayout="fixed";cs.forEach((x,k)=>x.style.width=ws[k]+"px");tb._fx=true;
+const mv=ev=>{const w=Math.max(40,Math.round(w0+(ev.clientX-x0)/z));cs[i].style.width=w+"px";tb.style.width=ws.reduce((a,v,k)=>a+(k==i?w:v),0)+"px"},
+up=()=>{g.removeEventListener("pointermove",mv);g.removeEventListener("pointerup",up);const m={};cs.forEach(x=>m[x.textContent.trim()]=parseInt(x.style.width)||0);ST.cw=ST.cw||{};ST.cw[tb.id]=m;save()};
+g.addEventListener("pointermove",mv);g.addEventListener("pointerup",up)};c.appendChild(g)})}
+function fdW(id){if(ST.cw)delete ST.cw[id];save();const tb=$(id);if(tb&&tb.rows)tfWid(tb);toast("Column widths reset")}
+function tfCols(tb){const hs=(ST.hc||{})[tb.id]||[],h=tb.rows[0];if(!h)return;[...h.cells].forEach((c,i)=>{const hd=tb.id!="jt"&&hs.includes(c.textContent.trim());[...tb.rows].forEach(r=>{const x=r.cells[i];if(x)x.style.display=hd?"none":""})})}
+function tfPick(tb){const h=tb.rows[0],nm=[...h.cells].map(c=>c.textContent.trim()).filter(Boolean),sig=nm.join("|");
+if(!tb._cp){if(!tb.parentNode.before)return;const w=document.createElement("div");w.className="cpw";const d=document.createElement("details");d.className="cp";d.innerHTML='<summary>Columns</summary><div class="cpm"></div>';w.appendChild(d);tb.parentNode.before(w);tb._cp=w}
+if(tb._sig===sig)return;tb._sig=sig;const m=tb._cp.querySelector(".cpm"),hs=(ST.hc||{})[tb.id]||[];
+m.style.columns=(tb.id=="jt"?JC.length:nm.length)>12?"2":"1";
+m.innerHTML=tb.id=="jt"?JC.map(([k,l])=>`<label><input type="checkbox" ${(ST.fj||JD).includes(k)?"checked":""} onchange="fdJ('${k}',this.checked)"> ${l}</label>`).join(""):nm.map(n=>`<label><input type="checkbox" ${hs.includes(n)?"":"checked"} data-t="${tb.id}" data-n="${esc(n)}" onchange="fdC(this)"> ${esc(n)}</label>`).join("");m.insertAdjacentHTML("beforeend",`<button class="btn o" style="margin-top:6px" onclick="fdW('${tb.id}')">Reset column widths</button>`)}
+const SV=["WIP","NOT DONE","CANCEL","Halt"],SL={"WIP":"WIP","NOT DONE":"Not Done","CANCEL":"Cancel","Halt":"Halt"};
+let svf="";
+let ST={ov:{},depts:[],teams:[],mem:{},cust:[],ac:null,sb:null,mode:"auto"};
+try{Object.assign(ST,JSON.parse(localStorage.getItem("erpcfg")||"{}"))}catch(e){}
+if(ST.rv!==2){ST.cust=[];ST.mem={};ST.rv=2}if(!Array.isArray(ST.depts))ST.depts=[];
+ensureTeams();
+const ovr=()=>{const dm=DS.dues?DS.dues.map:null;ALL=RAW.map(r=>{let x=r;const d=dm&&dm[r.code];if(d)x={...x,du:d.du,co:d.co!=null?d.co:Math.max(0,r.ag-(r.dc||0)-d.du)};if(ST.ov&&ST.ov[r.code])x={...x,st:ST.ov[r.code]};return x})};
+RAW=DS.jobs?DS.jobs.rows:DEFRAW;B=DS.budget?DS.budget.map:DEFB;ovr();
+const save=()=>{try{localStorage.setItem("erpcfg",JSON.stringify(ST))}catch(e){}syPush()};
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;");
+const tmOf=n=>{const m=ST.mem[n];return m&&ST.cust.includes(n)?m.team||"":""};
+function filt(){const a=$("gan").value,g=$("gtm").value,dp=$("gdp").value,s=effScope(),mm=ST.me,mt=mm?tmOf(mm):"";D=ALL.filter(r=>(!a||r.an==a)&&(!g||tmOf(r.an)==g)&&(!dp||deptOf(r.an)==dp)&&(s=="all"||(mm&&(s=="me"?r.an==mm:(mt?tmOf(r.an)==mt:r.an==mm)))))}
+const DF={zm:"100",fs:"13px",dn:"9px 12px",mw:"none",kp:"20px",ch:"150px",sbm:"wide"};
+function dsp2(){const R=document.documentElement.style;{const z=parseFloat(ST.zm||"100");R.setProperty("--z",z/100);const zr=document.getElementById("zmr");if(zr)zr.textContent=Math.round(z)+"%"}R.setProperty("--sc",parseFloat(ST.fs||"13px")/13);[["--fs","fs"],["--cp","dn"],["--mw","mw"],["--kp","kp"],["--ch","ch"]].forEach(([v,k])=>ST[k]?R.setProperty(v,ST[k]):R.removeProperty(v));
+const w={narrow:"180px",mini:"64px"}[ST.sbm]||((!ST.sbm||ST.sbm=="wide")&&ST.sbw?ST.sbw+"px":null);w?R.setProperty("--sbw",w):R.removeProperty("--sbw");
+const nv=document.querySelector("nav");nv.classList.toggle("mini",ST.sbm=="mini");nv.classList.toggle("hid",ST.sbm=="hid")}
+function theme(){dsp2();setTimeout(()=>typeof tfTop=="function"&&tfTop(),0);const r=document.documentElement.style;["--ac","--ac2","--sb"].forEach(v=>r.removeProperty(v));
+if(ST.ac){r.setProperty("--ac",ST.ac);r.setProperty("--ac2","color-mix(in srgb,"+ST.ac+" 35%,var(--card))")}if(ST.sb)r.setProperty("--sb",ST.sb);
+if(ST.mode=="auto")document.documentElement.removeAttribute("data-theme");else document.documentElement.setAttribute("data-theme",ST.mode)}
+const names=()=>[...ST.cust].sort();
+const people=()=>[...new Set([...ALL.map(r=>r.an),...ST.cust])].sort();
+const deptOf=n=>{const m=ST.mem[n];return m&&ST.cust.includes(n)?m.dept||"":""};
+function addDept(){if(!perm("teams"))return toast(DENY);const n=$("dpn").value.trim();if(!n)return;ST.depts.push({id:"d"+Date.now(),name:n,head:""});$("dpn").value="";logA("Department added",n);chg()}
+function delDept(id){if(!perm("teams"))return toast(DENY);logA("Department deleted",(ST.depts.find(x=>x.id==id)||{}).name);ST.depts=ST.depts.filter(x=>x.id!=id);Object.values(ST.mem).forEach(m=>{if(m.dept==id)m.dept=""});chg()}
+function setDept(id,k,v){if(!perm("teams"))return toast(DENY);ST.depts.find(x=>x.id==id)[k]=v;save();if(k=="name")refreshFilters()}
+function memRows(a){if(!a||!a.length)return 0;const T2=v=>v==null?"":String(v).trim(),h=a[0].map(c=>T2(c).toLowerCase()),hasH=h.some(x=>["name","member","member name"].includes(x));let ix={n:0,d:1,t:2,r:3,p:4,e:5},rows=a;
+if(hasH){const f=(...k)=>h.findIndex(x=>k.includes(x));ix={n:f("name","member","member name"),d:f("department","dept"),t:f("team"),r:f("role","designation","position"),p:f("phone","mobile","contact"),e:f("email","e-mail")};rows=a.slice(1)}
+const find=(arr,n)=>arr.find(x=>x.name.toLowerCase()==n.toLowerCase()),mkid=p=>p+Date.now()+Math.random().toString(36).slice(2,5);let cnt=0;
+rows.forEach(r=>{const g=k=>ix[k]<0?"":T2(r[ix[k]]),n=g("n");if(!n)return;const dn=g("d"),tn=g("t");let dep="",tm="";
+if(dn){let d=find(ST.depts,dn);if(!d){d={id:mkid("d"),name:dn,head:""};ST.depts.push(d)}dep=d.id}
+if(tn){let t=find(ST.teams,tn);if(!t){t={id:mkid("t"),name:tn,lead:""};ST.teams.push(t)}tm=t.id}
+if(!ST.cust.includes(n))ST.cust.push(n);const m=ST.mem[n]=ST.mem[n]||{};if(dn)m.dept=dep;if(tn)m.team=tm;if(g("r"))m.role=g("r");if(g("p"))m.phone=g("p");if(g("e"))m.email=g("e");cnt++});return cnt}
+function memPaste(){if(!perm("teams"))return toast(DENY);const a=($("mpt").value||"").split(/\r?\n/).filter(l=>l.trim()).map(l=>l.split(/\t|,|;/).map(s=>s.trim()));if(!a.length){toast("Paste at least one line");return}
+snap("Add pasted members");const n=memRows(a);logA("Members added (pasted)",String(n));chg();toast(n+" members added or updated",true)}
+async function memFile(inp){const file=inp.files[0];inp.value="";if(!file)return;if(!perm("teams"))return toast(DENY);try{const a=await readAOA(file);snap("Import members");const n=memRows(a);logA("Members imported",n+" from "+file.name);chg();toast(n+" members added or updated",true)}catch(e){toast("Import failed: "+e.message)}}
+function memImport(){if(!perm("teams"))return toast(DENY);const add=[...new Set(ALL.map(r=>r.an))].filter(a=>a&&a!="Unassigned"&&!ST.cust.includes(a));if(!add.length){toast("No new analysts found in the job data");return}
+snap("Import analysts");add.forEach(n=>{ST.cust.push(n);ST.mem[n]={team:"",dept:"",role:"Analyst"}});logA("Analysts imported from job data",String(add.length));chg();toast(add.length+" analysts added",true)}
+function memClear(){if(!perm("teams"))return toast(DENY);if(rzk!="mc"){rzk="mc";clearTimeout(rzt);rzt=setTimeout(()=>{rzk=null;mbkR()},4000);mbkR();return}
+clearTimeout(rzt);rzk=null;snap("Remove all members");logA("All members removed","");ST.cust=[];ST.mem={};chg();toast("All members removed",true)}
+function mbkR(){const on=rzk=="mc";$("mbk").innerHTML=`<div class="lab" style="margin:14px 0 4px">Rebuild the member list</div><div class="f" style="margin:0 0 8px"><button class="btn o" ${on?'style="background:var(--bad);color:#fff;border-color:var(--bad)"':""} onclick="memClear()">${on?"Click again to confirm":"Remove all members"}</button><button class="btn o" onclick="memImport()">Import analysts from job data</button><label class="btn o">Upload member list<input type="file" accept=".xlsx,.xls,.csv" hidden onchange="memFile(this)"></label><button class="btn o" onclick="tpl('members')">Template</button></div><textarea id="mpt" class="in" rows="4" placeholder="Paste members, one per line:&#10;Name, Department, Team, Role, Phone, Email"></textarea><div class="f" style="margin:6px 0 0"><button class="btn" onclick="memPaste()">Add pasted members</button></div><div class="note">Departments and teams that do not exist yet are created automatically.</div>`}
+function tmd(){const N=names(),ds=[...ST.depts.map(x=>({id:x.id,name:x.name,head:x.head||""})),{id:"",name:"No department",head:""}];
+$("tmd").innerHTML="<tr><th>Department<th>Head<th class=n>Members<th class=n>Teams<th class=n>Jobs<th class=n>Agreement<th class=n>Collected<th class=n>Collect %<th class=n>Dues<th class=n>Done</tr>"+ds.map(d=>{const ms=N.filter(n=>deptOf(n)==d.id),rs=D.filter(r=>deptOf(r.an)==d.id),tms=new Set(ms.map(n=>tmOf(n)).filter(Boolean));
+return`<tr><td>${esc(d.name)}<td>${esc(d.head||"-")}<td class=n>${ms.length}<td class=n>${tms.size}<td class=n>${rs.length}<td class=n>${f(sum(rs,"ag"))}<td class=n>${f(sum(rs,"co"))}<td class=n>${pc(sum(rs,"co"),sum(rs,"ag"))}<td class=n>${sum(rs,"du")?f(sum(rs,"du")):"-"}<td class=n>${rs.filter(r=>r.st=="Done").length}</tr>`}).join("")}
+
+function refreshFilters(){const g0=$("gan").value,AL=[...new Set(ALL.map(r=>r.an))].sort();$("gan").innerHTML='<option value="">All analysts</option>'+AL.map(a=>`<option>${esc(a)}</option>`).join("");$("gan").value=AL.includes(g0)?g0:"";const v=$("gtm").value;$("gtm").innerHTML='<option value="">All teams</option>'+ST.teams.map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join("");$("gtm").value=ST.teams.some(x=>x.id==v)?v:"";const dv=$("gdp").value;$("gdp").innerHTML='<option value="">All departments</option>'+ST.depts.map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join("");$("gdp").value=ST.depts.some(x=>x.id==dv)?dv:"";filt()}
+function chg(){save();refreshFilters();run();cpn()}
+function addTeam(){if(!perm("teams"))return toast(DENY);const n=$("tn").value.trim();if(!n)return;ST.teams.push({id:"t"+Date.now(),name:n,lead:""});logA("Team added",n);chg()}
+function delTeam(id){if(!perm("teams"))return toast(DENY);if(BT.includes(id))return;logA("Team deleted",(ST.teams.find(x=>x.id==id)||{}).name);ST.teams=ST.teams.filter(x=>x.id!=id);Object.values(ST.mem).forEach(m=>{if(m.team==id)m.team=""});chg()}
+function setTeam(id,k,v){if(!perm("teams"))return toast(DENY);ST.teams.find(x=>x.id==id)[k]=v;save();if(k=="name"){refreshFilters()}}
+function addMember(){if(!perm("teams"))return toast(DENY);const n=$("mn").value.trim();if(!n||names().includes(n))return;ST.cust.push(n);ST.mem[n]={team:$("mt2").value,dept:$("mdp").value,role:$("mr").value.trim()};$("mn").value="";$("mr").value="";logA("Member added",n);chg()}
+function delMember(n){if(!perm("teams"))return toast(DENY);logA("Member removed",n);ST.cust=ST.cust.filter(x=>x!=n);delete ST.mem[n];chg()}
+function setMem(n,k,v){if(!perm("teams"))return toast(DENY);ST.mem[n]=ST.mem[n]||{};ST.mem[n][k]=v;if(k=="team"||k=="dept")chg();else save()}
+function setC(k,v){ST[k]=v;save();theme();cpn()}
+function resetTheme(){ST.ac=ST.sb=ST.fs=ST.dn=ST.mw=ST.kp=ST.ch=ST.sbm=ST.zm=ST.sbw=null;ST.mode="auto";save();theme();cpn()}
+function cpn(){dcr();uar();mbkR();
+const DO=[["zm","Page zoom",[["50","50%"],["67","67%"],["75","75%"],["80","80%"],["90","90%"],["100","100% (default)"],["110","110%"],["125","125%"],["150","150%"],["175","175%"],["200","200%"]]],["fs","Text size",[["11px","Extra small"],["12px","Small"],["13px","Medium (default)"],["14px","Medium large"],["15px","Large"],["17px","Extra large"],["20px","Huge"],["22px","Maximum"]]],["dn","Table row density",[["6px 10px","Compact"],["9px 12px","Default"],["14px 14px","Comfortable"]]],["mw","Content width",[["none","Full width"],["1280px","Boxed"],["980px","Narrow"]]],["kp","Summary number size",[["16px","Small"],["20px","Default"],["28px","Large"]]],["ch","Chart height",[["110px","Short"],["150px","Default"],["220px","Tall"]]],["sbm","Sidebar",[["wide","Wide (default)"],["narrow","Narrow"],["mini","Icons only"],["hid","Hidden"]]]];
+$("dsp").innerHTML=DO.map(([k,l,o])=>`<div class="lab" style="margin-top:8px">${l}</div><select class="in" onchange="setC('${k}',this.value)">${o.map(([v,n])=>`<option value="${v}" ${(ST[k]||DF[k])==v?"selected":""}>${n}</option>`).join("")}</select>`).join("")+'<div class="note">Use the &#9776; button in the top bar to show or hide the sidebar. "Reset to default" in Appearance restores all of these.</div>';
+const AC=["#408dfb","#1f9d55","#8b5cf6","#f08c00","#e5484d","#0aa5a5","#d6336c"],SB=["#232a3b","#111827","#2b2b2b","#1d3b2f","#3a2a4d","#1e3a5f"];
+$("swa").innerHTML=AC.map(c=>`<button style="background:${c}" class="${ST.ac==c?"on":""}" onclick="setC('ac','${c}')" title="${c}"></button>`).join("")+`<input type="color" value="${ST.ac||"#408dfb"}" onchange="setC('ac',this.value)" title="Custom">`;
+$("sws").innerHTML=SB.map(c=>`<button style="background:${c}" class="${ST.sb==c?"on":""}" onclick="setC('sb','${c}')" title="${c}"></button>`).join("")+`<input type="color" value="${ST.sb||"#232a3b"}" onchange="setC('sb',this.value)" title="Custom">`;
+$("mdsel").value=ST.mode;$("mdsel").onchange=()=>setC("mode",$("mdsel").value);
+const N=names(),opt=(sel)=>'<option value="">Unassigned</option>'+ST.teams.map(x=>`<option value="${x.id}" ${x.id==sel?"selected":""}>${esc(x.name)}</option>`).join("");
+$("mt2").innerHTML=opt("");
+const stat=rs=>({j:rs.length,ag:sum(rs,"ag"),co:sum(rs,"co"),du:sum(rs,"du"),dn:rs.filter(r=>r.st=="Done").length});
+const row=(nm,s,extra)=>`${extra}<td class=n>${s.j}<td class=n>${f(s.ag)}<td class=n>${f(s.co)}<td class=n>${s.du?f(s.du):"-"}<td class=n>${pc(s.co,s.ag)}<td class=n>${s.dn}`;
+const groups=[...ST.teams.map(x=>({x,m:N.filter(n=>tmOf(n)==x.id)})),{x:{id:"",name:"Unassigned",lead:""},m:N.filter(n=>!tmOf(n))}];
+$("tt").innerHTML="<tr><th>Team<th>Lead<th class=n>Members<th class=n>Jobs<th class=n>Agreement<th class=n>Collected<th class=n>Dues<th class=n>Collect %<th class=n>Done<th></tr>"+groups.map(({x,m})=>{const s=stat(ALL.filter(r=>m.includes(r.an)));
+const nm=x.id?`<td><input class="in" value="${esc(x.name)}" onchange="setTeam('${x.id}','name',this.value)">`:`<td>${x.name}`;
+const ld=x.id?`<td><select class="in" onchange="setTeam('${x.id}','lead',this.value)"><option value="">-</option>${m.map(n=>`<option ${n==x.lead?"selected":""}>${esc(n)}</option>`).join("")}</select>`:"<td>-";
+return `<tr>${nm}${ld}<td class=n>${m.length}<td class=n>${s.j}<td class=n>${f(s.ag)}<td class=n>${f(s.co)}<td class=n>${s.du?f(s.du):"-"}<td class=n>${pc(s.co,s.ag)}<td class=n>${s.dn}<td>${x.id&&!BT.includes(x.id)?`<button class="x" onclick="delTeam('${x.id}')" title="Delete team">&times;</button>`:""}</tr>`}).join("");
+const dopt=s=>'<option value="">- none -</option>'+ST.depts.map(x=>`<option value="${x.id}" ${x.id==s?"selected":""}>${esc(x.name)}</option>`).join("");
+$("mdp").innerHTML=dopt("");
+const nm2=id=>(ST.teams.find(x=>x.id==id)||{}).name||"",dn2=id=>(ST.depts.find(x=>x.id==id)||{}).name||"",GB=ST.mgb||"";
+const NS=N.slice().sort((a,b)=>{const ka=GB=="dept"?dn2(deptOf(a)):GB=="team"?nm2(tmOf(a)):"",kb=GB=="dept"?dn2(deptOf(b)):GB=="team"?nm2(tmOf(b)):"";return ka==kb?a.localeCompare(b):(!ka?1:!kb?-1:ka.localeCompare(kb))});
+$("mgb").value=GB;
+$("dpt").innerHTML="<tr><th>Department<th>Head<th class=n>Members<th class=n>Jobs<th class=n>Agreement<th class=n>Collected<th class=n>Dues<th class=n>Collect %<th class=n>Done<th></tr>"+[...ST.depts,{id:"",name:"No department"}].map(x=>{const m=N.filter(n=>deptOf(n)==x.id),s=stat(ALL.filter(r=>m.includes(r.an)));
+const nm=x.id?`<td><input class="in" value="${esc(x.name)}" onchange="setDept('${x.id}','name',this.value)">`:`<td>${x.name}`,hd=x.id?`<td><select class="in" onchange="setDept('${x.id}','head',this.value)"><option value="">-</option>${m.map(n=>`<option ${n==x.head?"selected":""}>${esc(n)}</option>`).join("")}</select>`:"<td>-";
+return`<tr>${nm}${hd}<td class=n>${m.length}<td class=n>${s.j}<td class=n>${f(s.ag)}<td class=n>${f(s.co)}<td class=n>${s.du?f(s.du):"-"}<td class=n>${pc(s.co,s.ag)}<td class=n>${s.dn}<td>${x.id?`<button class="x" onclick="delDept('${x.id}')" title="Delete department">&times;</button>`:""}</tr>`}).join("");
+$("mtb").innerHTML="<tr><th>Member<th>Department<th>Team<th>Role<th>Phone<th>Email<th class=n>Jobs<th class=n>Agreement<th class=n>Collected<th class=n>Dues<th class=n>Collect %<th class=n>Done<th></tr>"+(NS.length?NS.map(n=>{const m=ST.mem[n]||{},s=stat(ALL.filter(r=>r.an==n)),a=esc(n);
+return`<tr><td>${a}<td><select class="in" data-n="${a}" onchange="setMem(this.dataset.n,'dept',this.value)">${dopt(m.dept)}</select><td><select class="in" data-n="${a}" onchange="setMem(this.dataset.n,'team',this.value)">${opt(m.team)}</select><td><input class="in" value="${esc(m.role||"")}" placeholder="Analyst" onchange="setMem(this.dataset.n,'role',this.value)" data-n="${a}"><td><input class="in" value="${esc(m.phone||"")}" data-n="${a}" onchange="setMem(this.dataset.n,'phone',this.value)"><td><input class="in" value="${esc(m.email||"")}" data-n="${a}" onchange="setMem(this.dataset.n,'email',this.value)">${row(n,s,"")}<td><button class="x" data-n="${a}" onclick="delMember(this.dataset.n)" title="Remove">&times;</button></tr>`}).join(""):'<tr><td colspan="13" style="color:var(--mu)">No members yet. Add one above, paste or upload a list, or import analysts from the job data.')
+}
+const AN=[...new Set(ALL.map(r=>r.an))].sort();
+AN.forEach(a=>$("gan").insertAdjacentHTML("beforeend",`<option>${a}</option>`));
+$("gan").onchange=$("gtm").onchange=$("gdp").onchange=()=>{filt();run()};
+$("cp").onclick=()=>{const s=[...document.querySelectorAll("main section")].find(x=>!x.classList.contains("h")),tb=s.querySelector("table");
+if(!tb){$("cp").textContent="Open a table page first";setTimeout(()=>$("cp").innerHTML="&#10697; Copy table",1800);return}
+const tx=[...tb.rows].filter(r=>!r.classList.contains("fr")&&r.style.display!="none").map(r=>[...r.cells].filter(c=>c.style.display!="none").map(c=>c.innerText.replace(/\s+/g," ").trim()).join("\t")).join("\n");
+const done=()=>{$("cp").textContent="Copied! Paste in Excel";setTimeout(()=>$("cp").innerHTML="&#10697; Copy table",1800)};
+try{navigator.clipboard.writeText(tx).then(done,()=>fb())}catch(e){fb()}
+function fb(){const a=document.createElement("textarea");a.value=tx;document.body.appendChild(a);a.select();try{document.execCommand("copy");done()}catch(e){}a.remove()}};
+function run(){
+// Overview
+const ag=sum(D,"ag"),co=sum(D,"co"),du=sum(D,"du"),dn=D.filter(r=>r.st=="Done").length;
+$("kp").innerHTML=[["Total jobs",D.length,dn+" done"],["Agreement value",f(ag),"incl. VAT"],["Collected",f(co),pc(co,ag)+" of value"],["Outstanding dues",f(du),D.filter(r=>r.du>0).length+" jobs"],["VAT",f(sum(D,"vat")),""],["Discounts",f(sum(D,"dc")),""],["Avg fee / job",(D.length?f(sum(D,"bu")/D.length):"-"),"ex-VAT"],["Banks / clients",new Set(D.map(r=>r.bk)).size+" / "+new Set(D.map(r=>r.cl)).size,""]].filter(x=>!hid("k:"+x[0])).map(x=>`<div class="c"><span>${x[0]}</span><b>${x[1]}</b><i>${x[2]||"&nbsp;"}</i></div>`).join("");
+const mx=Math.max(1,...MO.map(m=>Math.max(sum(D.filter(r=>r.mo==m),"bu"),B[m][0]+B[m][1])));
+$("mch").innerHTML=MO.map(m=>{const a=sum(D.filter(r=>r.mo==m),"bu"),b=B[m][0]+B[m][1];return `<div title="${m}: budget ${f(b)} / actual ${f(a)}"><p><u class="o" style="height:${b/mx*100}%"></u><u style="height:${a/mx*100}%"></u></p>${m.slice(0,3)}</div>`}).join("");
+$("sb").innerHTML=bars(["Done","WIP","NOT DONE","CANCEL","Halt"].map(s=>[s,D.filter(r=>r.st==s).length]),x=>x+" ("+pc(x,D.length)+")");
+const top=(k)=>grp(k).map(([n,a])=>[n,sum(a,"ag")]).filter(x=>x[0]!="N/A").sort((a,b)=>b[1]-a[1]).slice(0,10);
+$("tc").innerHTML=bars(top("cl"));$("tb").innerHTML=bars(top("bk"));
+// Budget table
+let h="<tr><th>Month<th class=n>Budget CD&amp;O<th class=n>Budget SME<th class=n>Budget total<th class=n>Jobs<th class=n>Actual CD&amp;O<th class=n>Actual SME<th class=n>Actual total<th class=n>Variance<th class=n>Achv.</tr>",T=[0,0,0,0,0,0,0];
+[...MO,"CF"].forEach(m=>{const b=B[m]||[0,0],r=D.filter(x=>x.mo==m),a=sum(r.filter(x=>x.ty!="SME"),"bu"),s=sum(r.filter(x=>x.ty=="SME"),"bu"),bt=b[0]+b[1],at=a+s,v=at-bt;
+[b[0],b[1],bt,r.length,a,s,at].forEach((x,i)=>T[i]+=x);
+h+=`<tr><td>${m=="CF"?"CF (2024 carry-fwd)":m}<td class=n>${f(b[0])}<td class=n>${f(b[1])}<td class=n>${f(bt)}<td class=n>${r.length}<td class=n>${f(a)}<td class=n>${f(s)}<td class=n>${f(at)}<td class="n ${v<0?"neg":"pos"}">${f(v)}<td class=n>${pc(at,bt)}</tr>`});
+const V=T[6]-T[2];h+=`<tr class=t><td>Total${T.slice(0,7).map((x,i)=>`<td class=n>${f(x)}`).join("")}<td class="n ${V<0?"neg":"pos"}">${f(V)}<td class=n>${pc(T[6],T[2])}</tr>`;
+$("mt").innerHTML=h;
+// Analysis
+let ak="ag",ad=-1;
+function ana(){const k=$("dim").value;const R=grp(k).map(([n,a])=>({n,j:a.length,ag:sum(a,"ag"),co:sum(a,"co"),du:sum(a,"du"),dn:a.filter(r=>r.st=="Done").length,wp:a.filter(r=>r.st=="WIP").length,nd:a.filter(r=>r.st=="NOT DONE").length}));
+R.sort((a,b)=>(a[ak]>b[ak]?1:a[ak]<b[ak]?-1:0)*ad);const m=Math.max(1,...R.map(r=>r.ag));
+const H=[["n",dims[k]],["j","Jobs","n"],["ag","Agreement","n"],["co","Collected","n"],["du","Dues","n"],["x","Collect %","n"],["dn","Done","n"],["wp","WIP","n"],["nd","Not done","n"],["s","Share"]];
+$("at").innerHTML="<tr>"+H.map(c=>`<th class="${c[2]||""}" data-k="${c[0]}">${c[1]}</th>`).join("")+"</tr>"+R.map(r=>`<tr><td>${r.n}<td class=n>${r.j}<td class=n>${f(r.ag)}<td class=n>${f(r.co)}<td class=n>${r.du?f(r.du):"-"}<td class=n>${pc(r.co,r.ag)}<td class=n>${r.dn}<td class=n>${r.wp}<td class=n>${r.nd}<td style="min-width:110px"><div class="bar" style="margin:0"><div><u style="width:${r.ag/m*100}%"></u></div></div></tr>`).join("");
+document.querySelectorAll("#at th").forEach(th=>th.onclick=()=>{const q=th.dataset.k;if(q=="x"||q=="s")return;ad=ak==q?-ad:-1;ak=q;ana()})}
+$("dim").onchange=()=>{ak="ag";ad=-1;ana()};ana();
+// Jobs
+let sk="code",sd=1;
+function jobs(){const q=$("q").value.toLowerCase(),s=$("fs").value,t=$("ft").value,m=$("fm").value;
+let r=D.filter(x=>(!s||x.st==s)&&(!t||x.ty==t)&&(!m||x.mo==m)&&(!q||[x.code,x.cl,x.bk,x.an,x.sec].join(" ").toLowerCase().includes(q)));
+r.sort((a,b)=>(a[sk]>b[sk]?1:a[sk]<b[sk]?-1:0)*sd);
+const cols=JC.filter(c=>(ST.fj||JD).includes(c[0]));
+$("jt").innerHTML="<tr>"+cols.map(c=>`<th class="${c[2]||""}" data-k="${c[0]}">${c[1]}</th>`).join("")+"</tr>"+r.map(x=>`<tr class="r" data-c="${x.code}">`+cols.map(c=>"<td"+(c[2]?" class=n":"")+">"+jv(x,c)+"</td>").join("")+"</tr>").join("");
+$("jn").textContent=r.length+" jobs | Agreement "+f(sum(r,"ag"))+" | Collected "+f(sum(r,"co"))+" | Dues "+f(sum(r,"du"))+" | click a row for details";
+document.querySelectorAll("#jt th").forEach(th=>th.onclick=()=>{const k=th.dataset.k;sd=sk==k?-sd:1;sk=k;jobs()});
+document.querySelectorAll("#jt tr.r").forEach(tr=>tr.onclick=()=>detail(tr.dataset.c))}
+["q","fs","ft","fm"].forEach(i=>$(i).oninput=jobs);jobs();
+function detail(c){const x=D.find(r=>r.code==c)||ALL.find(r=>r.code==c),L=[["Client",x.cl],["Status",x.st],["Category",x.cat],["Type / job",x.ty+" / "+(x.jt||"-")],["Sector",x.sec],["Bank",x.bk],["Branch",x.br],["Analyst",x.an],["Zone / division",(x.zn||"-")+" / "+(x.dv||"-")],["District / thana",(x.dis||"-")+" / "+(x.th||"-")],["Date of rating",x.rd],["Valid till",x.vt],["Report print",x.pd],["Bill collection",x.bd],["Fee range",x.ow],["Budget month",x.mo],["Agreement (incl. VAT)",f(x.ag)],["Collected",f(x.co)],["Discount",f(x.dc)],["Dues",f(x.du)],["VAT",f(x.vat)],["Budget (ex-VAT)",f(x.bu)],["Bank contact",[x.bc,x.bn].filter(Boolean).join(" ")],["Client contact",[x.cc,x.cn].filter(Boolean).join(" ")]];
+$("dr").innerHTML=`<button onclick="$('dr').classList.add('h')">Close</button><h3>${x.code}</h3>${perm("upload")?`<button style="float:none;margin:0 0 8px" onclick="jobEdit('${x.code}')">Edit job</button>`:""}<dl>`+L.map(l=>`<dt>${l[0]}<dd>${l[1]||"-"}`).join("")+"</dl>"+`<div class="lab">Change status (this browser only)</div><select class="in" style="margin-top:6px" onchange="setSt('${x.code}',this.value)"><option value="">Original (${RAW.find(r=>r.code==c).st})</option>${["Done","WIP","NOT DONE","CANCEL","Halt"].map(s=>`<option ${ST.ov&&ST.ov[c]==s?"selected":""}>${s}</option>`).join("")}</select>`+nts(x.code);$("dr").classList.remove("h");const cb=$("dr").querySelector("button");cb&&cb.focus&&cb.focus()}
+// Dues
+const dr=D.filter(x=>x.du>0).sort((a,b)=>b.du-a.du);
+$("dt").innerHTML="<tr><th>Code<th>Client<th>Bank / Branch<th class=n>Agreement<th class=n>Dues<th>Status<th>Bank contact<th>Client contact</tr>"+dr.map(x=>`<tr class="r" data-c="${x.code}"><td>${x.code}<td>${x.cl}<td>${x.bk||"-"}${x.br?" / "+x.br:""}<td class=n>${f(x.ag)}<td class=n>${f(x.du)}<td>${st(x.st)}<td>${x.bc||"-"} ${x.bn||""}<td>${x.cc||"-"} ${x.cn||""}</tr>`).join("");
+$("dn").textContent=dr.length+" jobs with dues | Total "+f(sum(dr,"du"))+" | "+f(sum(dr.filter(x=>x.st=="NOT DONE"),"du"))+" on NOT DONE jobs";
+document.querySelectorAll("#dt tr.r").forEach(tr=>tr.onclick=()=>detail(tr.dataset.c));
+// Renewals
+const RL=D.filter(x=>x.st!="CANCEL"&&x.vt).map(x=>({...x,dl:Math.round((new Date(x.vt)-TODAY)/864e5)})).sort((a,b)=>a.dl-b.dl);
+const ex=RL.filter(x=>x.dl<0),s30=RL.filter(x=>x.dl>=0&&x.dl<=90),ok=RL.filter(x=>x.dl>90);
+$("rk").innerHTML=[["Expired",ex.length,f(sum(ex,"bu"))+" ex-VAT"],["Expiring in 90 days",s30.length,f(sum(s30,"bu"))+" ex-VAT"],["Valid beyond 90 days",ok.length,f(sum(ok,"bu"))+" ex-VAT"]].map(x=>`<div class="c"><span>${x[0]}</span><b>${x[1]}</b><i>${x[2]}</i></div>`).join("");
+$("rt").innerHTML="<tr><th>Code<th>Client<th>Bank<th>Analyst<th>Valid till<th class=n>Days left<th class=n>Fee ex-VAT<th>Status</tr>"+RL.map(x=>`<tr class="r" data-c="${x.code}"><td>${x.code}<td>${x.cl}<td>${x.bk||"-"}<td>${x.an}<td>${x.vt}<td class="n ${x.dl<0?"neg":x.dl<=90?"":"pos"}">${x.dl<0?"expired "+(-x.dl)+"d":x.dl}<td class=n>${f(x.bu)}<td>${st(x.st)}</tr>`).join("");
+document.querySelectorAll("#rt tr.r").forEach(tr=>tr.onclick=()=>detail(tr.dataset.c));
+window.detail=detail;window.jobs=jobs;svr();yyr();wkr();odr();dhr();fur();agr();bfr();alr();lgr();dfoot();wsh();tmr();tmd();mvr();onb();
+}
+run();
+$("gs").oninput=()=>{document.querySelector('nav button[data-t="jb"]').click();$("q").value=$("gs").value;$("q").oninput()};
+$("nj").onclick=()=>document.querySelector('nav button[data-t="jb"]').click();
+theme();refreshFilters();run();cpn();
+function svr(){
+$("svs").value=svf;
+$("svk").innerHTML=SV.map(s=>{const a=D.filter(r=>r.st==s);return `<div class="c" style="cursor:pointer" onclick="svf='${s}';svr()" title="Show these jobs"><span>${SL[s]}</span><b>${a.length}</b><i>${pc(a.length,D.length)} of jobs &middot; dues ${f(sum(a,"du"))}</i></div>`}).join("");
+const sm=(rs)=>[rs.length,rs.filter(r=>r.ty=="SME").length,rs.filter(r=>r.ty!="SME").length,sum(rs,"ag"),sum(rs,"co"),sum(rs,"du"),sum(rs,"bu")];
+const cell=a=>`<td class=n>${a[0]}<td class=n>${a[1]}<td class=n>${a[2]}<td class=n>${f(a[3])}<td class=n>${f(a[4])}<td class=n>${a[5]?f(a[5]):"-"}<td class=n>${f(a[6])}`;
+$("svt").innerHTML="<tr><th>Status<th class=n>Jobs<th class=n>SME<th class=n>CD&amp;O<th class=n>Agreement<th class=n>Collected<th class=n>Dues<th class=n>Fee ex-VAT<th class=n>% of jobs</tr>"+SV.map(s=>{const a=sm(D.filter(r=>r.st==s));return `<tr><td>${st(s)}${cell(a)}<td class=n>${pc(a[0],D.length)}</tr>`}).join("")+(()=>{const a=sm(D.filter(r=>SV.includes(r.st)));return `<tr class=t><td>Total (4 statuses)${cell(a)}<td class=n>${pc(a[0],D.length)}</tr>`})();
+const MM=[...MO,"CF"],cnt=(rs,s)=>rs.filter(r=>r.st==s).length;
+$("svm").innerHTML="<tr><th>Month"+SV.map(s=>`<th class=n>${SL[s]}`).join("")+"<th class=n>Total<th class=n>Dues<th class=n>Fee ex-VAT</tr>"+MM.map(m=>{const rs=D.filter(r=>r.mo==m&&SV.includes(r.st));return `<tr><td>${m=="CF"?"CF (2024)":m}${SV.map(s=>`<td class=n>${cnt(rs,s)||"-"}`).join("")}<td class=n>${rs.length||"-"}<td class=n>${rs.length?f(sum(rs,"du")):"-"}<td class=n>${rs.length?f(sum(rs,"bu")):"-"}</tr>`}).join("");
+const an=[...new Set(D.map(r=>r.an))].sort();
+$("sva").innerHTML="<tr><th>Analyst"+SV.map(s=>`<th class=n>${SL[s]}`).join("")+"<th class=n>Total<th class=n>Dues</tr>"+an.map(n=>{const rs=D.filter(r=>r.an==n&&SV.includes(r.st));return rs.length?`<tr><td>${n}${SV.map(s=>`<td class=n>${cnt(rs,s)||"-"}`).join("")}<td class=n>${rs.length}<td class=n>${sum(rs,"du")?f(sum(rs,"du")):"-"}</tr>`:""}).join("");
+const L=D.filter(r=>svf?r.st==svf:SV.includes(r.st)).sort((a,b)=>b.du-a.du||(a.code>b.code?1:-1));
+$("svj").innerHTML="<tr><th>Code<th>Client<th>Bank<th>Analyst<th>Type<th>Month<th>Rated<th class=n>Agreement<th class=n>Dues<th>Status</tr>"+L.map(x=>`<tr class="r" data-c="${x.code}"><td>${x.code}<td>${x.cl}<td>${x.bk||"-"}<td>${x.an}<td>${x.ty}<td>${x.mo}<td>${x.rd}<td class=n>${f(x.ag)}<td class=n>${x.du?f(x.du):"-"}<td>${st(x.st)}</tr>`).join("");
+$("svn").textContent=L.length+" jobs | Agreement "+f(sum(L,"ag"))+" | Dues "+f(sum(L,"du"))+(D.some(r=>r.st=="Halt")?"":" | No job is marked Halt yet - open a job and change its status to Halt.");
+document.querySelectorAll("#svj tr.r").forEach(tr=>tr.onclick=()=>detail(tr.dataset.c))}
+function setSt(c,v){if(!perm("edit"))return toast(DENY);logA("Status change",c+" to "+(v||"original"));ST.ov=ST.ov||{};if(v)ST.ov[c]=v;else delete ST.ov[c];ovr();chg();detail(c)}
+const toast=(m,u)=>{const e=$("toast");e.textContent=m;if(u){const b=document.createElement("button");b.textContent="Undo";b.style.cssText="margin-left:12px;border:1px solid currentColor;background:none;color:inherit;border-radius:6px;padding:2px 10px;cursor:pointer";b.onclick=undo;e.appendChild(b)}e.style.display="block";clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display="none",u?10000:3500)};
+const curSec=()=>[...document.querySelectorAll("main section")].find(x=>!x.classList.contains("h"));
+const ftxt=()=>[$("gtm").selectedOptions[0].text,$("gan").selectedOptions[0].text].filter(t=>!t.startsWith("All")).join(" / ")||"All teams & analysts";
+const grid=tb=>[...tb.rows].filter(r=>!r.classList.contains("fr")&&r.style.display!="none").map(r=>[...r.cells].filter(c=>c.style.display!="none").map(c=>c.innerText.replace(/\s+/g," ").trim()));
+const num=v=>/^-?(\d{1,3}(,\d{3})+|\d+)(\.\d+)?$/.test(v)?Number(v.replace(/,/g,"")):(v=="-"?"":v);
+const stamp=()=>new Date().toISOString().slice(0,10);
+async function dl(name,data){if(typeof claude=="undefined"){try{const u=URL.createObjectURL(data instanceof Blob?data:new Blob([data])),a=document.createElement("a");a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),2000);return true}catch(e){toast("Could not download the file");return false}}
+const d=await claude.use("downloads");if(!d){toast("Downloads are not available in this view");return}
+try{await d.save({filename:name,data});return true}catch(e){if(e&&e.code!="declined")toast("Could not save file ("+(e.code||"error")+")");return false}}
+async function xl(){if(typeof XLSX=="undefined"){toast("Excel library failed to load");return}
+const s=curSec(),t=s.querySelector("table"),wb=XLSX.utils.book_new();
+const add=(n,tb)=>XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(grid(tb).map(r=>r.map(num))),n.slice(0,31));
+XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([["ERP export"],["Filter",ftxt()],["Generated",new Date().toLocaleString()]]),"Info");
+let nm;if(t&&s.id!="cpn"){nm=s.querySelector("h1").textContent;s.querySelectorAll("table").forEach((tb,i,a)=>add(a.length>1?tb.dataset.n:nm,tb))}else{nm="All";[["Budget vs Actual","mt"],["Jobs","jt"],["Dues","dt"],["Renewals","rt"],["Analysis","at"],["Surveillance","svj"],["Working","wkt"],["Data health","dht"],["Follow-ups","fut"],["Year-to-year","yyt"]].forEach(([n,i])=>add(n,$(i)))}
+await dl("ERP_"+nm.replace(/[^\w]+/g,"_")+"_"+stamp()+".xlsx",new Blob([XLSX.write(wb,{bookType:"xlsx",type:"array"})]))}
+async function pdf(){const J=window.jspdf;if(!J||!J.jsPDF||typeof J.jsPDF.API.autoTable!="function"){toast("PDF library failed to load");return}
+const s=curSec();if(s.id=="cpn"){toast("Open a data page (Dashboard, Jobs, Dues, Reports) to export PDF");return}
+const doc=new J.jsPDF({orientation:"landscape",unit:"pt",format:"a4"}),h=s.querySelector("h1").textContent,hex=(ST.ac||"#408dfb").replace("#",""),rgb=[0,2,4].map(i=>parseInt(hex.substr(i,2),16));
+doc.setFontSize(14);doc.text("ERP - "+h,30,32);doc.setFontSize(8);doc.setTextColor(110);doc.text(ftxt()+"  |  "+new Date().toLocaleString(),30,46);
+let y=58;const at=(tb,title)=>{const g=grid(tb);if(title){doc.setFontSize(10);doc.setTextColor(0);doc.text(title,30,y+10);y+=16}
+doc.autoTable({head:[g[0]],body:g.slice(1),startY:y,margin:{left:30,right:30},styles:{fontSize:7,cellPadding:3},headStyles:{fillColor:rgb},
+columnStyles:Object.fromEntries([...tb.rows[0].cells].filter(c=>c.style.display!="none").map((c,i)=>[i,{halign:c.classList.contains("n")?"right":"left"}]))});y=doc.lastAutoTable.finalY+18};
+if(s.id=="ov"){const k=[...$("kp").children].map(c=>[c.children[0].textContent,c.children[1].textContent,c.children[2].textContent]);
+doc.autoTable({head:[["Metric","Value","Note"]],body:k,startY:y,margin:{left:30,right:30},styles:{fontSize:8,cellPadding:3},headStyles:{fillColor:rgb}});y=doc.lastAutoTable.finalY+18;at($("mt"),"Budget vs Actual")}
+else s.querySelectorAll("table").forEach((tb,i,a)=>at(tb,a.length>1?tb.dataset.n:""));
+const n=doc.getNumberOfPages();for(let i=1;i<=n;i++){doc.setPage(i);doc.setFontSize(7);doc.setTextColor(120);doc.text("Page "+i+" of "+n,doc.internal.pageSize.getWidth()-80,doc.internal.pageSize.getHeight()-14)}
+await dl("ERP_"+h.replace(/[^\w]+/g,"_")+"_"+stamp()+".pdf",doc.output("blob"))}
+function prt(){$("pt").textContent="ERP - "+curSec().querySelector("h1").textContent+" | "+ftxt()+" | "+new Date().toLocaleString();
+try{window.print()}catch(e){toast("Printing is blocked in this view - use the PDF button instead")}}
+$("sbt").onclick=()=>{ST.sbm=ST.sbm=="hid"?"wide":"hid";save();theme();cpn()};
+$("bx").onclick=xl;$("bp").onclick=pdf;$("bpr").onclick=prt;
+const MOB=new MutationObserver(ms=>ms.forEach(m=>tfDeco(m.target)));
+document.querySelectorAll("table").forEach(tb=>{if(tb.id){MOB.observe(tb,{childList:true});tfDeco(tb)}});
+$("cf").onclick=tfClear;$("zmm").onclick=()=>zmStep(-1);$("zmr").onclick=()=>zmStep(0);$("zmp").onclick=()=>zmStep(1);$("afm").onclick=()=>fsStep(-1);$("afr").onclick=()=>fsStep(0);$("afp").onclick=()=>fsStep(1);
+// Nav
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x==b));["ov","bu","an","jb","du","rn","sv","yy","wk","od","fu","dh","alog","tm","mv","cpn"].forEach(i=>$(i).classList.toggle("h",i!=b.dataset.t));$("dr").classList.add("h");scrollTo(0,0);tfTop();ST.pg=b.dataset.t;save();document.querySelectorAll("nav button").forEach(x=>x.setAttribute("aria-current",x==b?"page":"false"))});
+(()=>{const g=$("sbr");if(!g)return;g.onpointerdown=e=>{e.preventDefault();g.setPointerCapture&&g.setPointerCapture(e.pointerId);const z=parseFloat(ST.zm||"100")/100,sc=parseFloat(ST.fs||"13px")/13;
+const mv=ev=>{ST.sbm="wide";ST.sbw=Math.max(140,Math.min(420,Math.round(ev.clientX/z/sc)));dsp2()},up=()=>{g.removeEventListener("pointermove",mv);g.removeEventListener("pointerup",up);save();cpn()};g.addEventListener("pointermove",mv);g.addEventListener("pointerup",up)}})();
+document.addEventListener&&document.addEventListener("pointerup",()=>document.querySelectorAll(".sc").forEach(el=>{if(el.style.height&&el.style.maxHeight!="none")el.style.maxHeight="none"}));
+document.addEventListener&&document.addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key&&e.key.toLowerCase()=="k"){e.preventDefault();cmOpen();return}if(e.key=="Escape"){$("cm").classList.add("h");$("pf").classList.contains("h")||0}if(e.key=="Escape")$("dr").classList.add("h");if((e.key=="Enter"||e.key==" ")&&e.target.matches&&e.target.matches("tr.r")){e.preventDefault();e.target.click()}});
+window.addEventListener&&window.addEventListener("error",e=>{if(!window._eb){window._eb=1;setTimeout(()=>window._eb=0,3000);toast("Something went wrong ("+(e.message||"unexpected error")+"). Try again, or use Reset in the Control panel.")}});
+meInit();$("cmb").onclick=cmOpen;_po.observe(document.body,{childList:true,subtree:true});permUI();syStart();
+if(ST.pg&&document.querySelector('nav button[data-t="'+ST.pg+'"]'))go(ST.pg);
+</script></body></html>
